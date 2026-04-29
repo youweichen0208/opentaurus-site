@@ -59,6 +59,133 @@
       <section class="band">
         <div class="section-inner">
           <div class="section-head">
+            <h2>优先补这 6 组验证场景</h2>
+            <p>不要给每个 Tool 都单独拍图。更有效的方式是按场景收口，让客户先看到“能连、能查、能诊断、能下钻、能接云、能安全执行变更”。</p>
+          </div>
+
+          <div class="feature">
+            <div class="feature-copy">
+              <span class="label mono">Scenario 01</span>
+              <h3>基础连通与发现</h3>
+              <p>这一组图应该一次覆盖 `ping`、`list_data_sources`、`list_databases`、`list_tables`、`describe_table`。目的是证明：MCP 不是假接口，已经连上真实 datasource，并且能发现 schema。</p>
+              <div class="quote-box">推荐截图组合：左侧 `list_data_sources`，右侧 `describe_table`。一张图就能把“连通 + schema discovery”讲清楚。</div>
+            </div>
+            <div class="terminal shot-placeholder">
+              <div class="terminal-head">
+                <div class="lights"><span class="r"></span><span class="y"></span><span class="g"></span></div>
+                <div class="terminal-title mono">discovery baseline</div>
+              </div>
+              <div class="terminal-body mono">
+                <div><span class="prompt">tool&gt;</span> list_data_sources()</div>
+                <div class="dim">items: prod-ro, staging-ro, local-dev</div>
+                <div><span class="prompt">tool&gt;</span> describe_table(database=shop, table=orders)</div>
+                <div class="dim">columns: id, user_id, amount, created_at</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="feature">
+            <div class="feature-copy">
+              <span class="label mono">Scenario 02</span>
+              <h3>只读 SQL 与标准 Explain</h3>
+              <p>这一组图覆盖 `execute_readonly_sql` 和 `explain_sql`。客户最关心的是：除了列元数据，是否真能执行查询并返回结构化结果与 plan 分析。</p>
+            </div>
+            <div class="terminal shot-placeholder">
+              <div class="terminal-head">
+                <div class="lights"><span class="r"></span><span class="y"></span><span class="g"></span></div>
+                <div class="terminal-title mono">readonly sql</div>
+              </div>
+              <div class="terminal-body mono">
+                <div><span class="prompt">tool&gt;</span> execute_readonly_sql("select count(*) from orders")</div>
+                <div class="dim">rows: 1</div>
+                <div class="dim">result: [{"count(*)": 241905}]</div>
+                <div><span class="prompt">tool&gt;</span> explain_sql("select * from orders where user_id = 42")</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="feature">
+            <div class="feature-copy">
+              <span class="label mono">Scenario 03</span>
+              <h3>诊断入口与根因摘要</h3>
+              <p>这一组图优先展示 `diagnose_service_latency`。它最能说明 OpenTaurus 的价值，因为它不是给碎片数据，而是给“症状入口、根因排序、下一步 Tool”。</p>
+            </div>
+            <div class="terminal shot-placeholder">
+              <div class="terminal-head">
+                <div class="lights"><span class="r"></span><span class="y"></span><span class="g"></span></div>
+                <div class="terminal-title mono">latency diagnosis</div>
+              </div>
+              <div class="terminal-body mono">
+                <div><span class="prompt">tool&gt;</span> diagnose_service_latency(relative=15m)</div>
+                <div><span class="warn">severity:</span> high</div>
+                <div>summary: slow SQL plus connection buildup</div>
+                <div class="dim">next: diagnose_slow_query / show_processlist</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="feature">
+            <div class="feature-copy">
+              <span class="label mono">Scenario 04</span>
+              <h3>诊断下钻与 live evidence</h3>
+              <p>这一组图覆盖 `find_top_slow_sql`、`diagnose_slow_query`、`show_processlist`。目的是证明 diagnostics 不是黑盒结论，而是能继续往下钻到 SQL、会话和连接模式。</p>
+            </div>
+            <div class="terminal shot-placeholder">
+              <div class="terminal-head">
+                <div class="lights"><span class="r"></span><span class="y"></span><span class="g"></span></div>
+                <div class="terminal-title mono">drill-down evidence</div>
+              </div>
+              <div class="terminal-body mono">
+                <div><span class="prompt">tool&gt;</span> find_top_slow_sql(relative=15m)</div>
+                <div class="dim">top digest: 7c3... rows_examined=12.4M</div>
+                <div><span class="prompt">tool&gt;</span> show_processlist(user=app_user)</div>
+                <div class="dim">returned 12 processlist rows</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="feature">
+            <div class="feature-copy">
+              <span class="label mono">Scenario 05</span>
+              <h3>Taurus 专属能力与 feature matrix</h3>
+              <p>这一组图优先展示 `list_taurus_features`。如果实例支持，再补 `explain_sql_enhanced`、`flashback_query`、`list_recycle_bin`。这是“为什么不是普通 MySQL MCP”的核心证明。</p>
+            </div>
+            <div class="terminal shot-placeholder">
+              <div class="terminal-head">
+                <div class="lights"><span class="r"></span><span class="y"></span><span class="g"></span></div>
+                <div class="terminal-title mono">taurus features</div>
+              </div>
+              <div class="terminal-body mono">
+                <div><span class="prompt">tool&gt;</span> list_taurus_features(datasource=prod-ro)</div>
+                <div class="dim">flashback_query     available / enabled</div>
+                <div class="dim">ndp_pushdown        available / enabled</div>
+                <div class="dim">recycle_bin         available / enabled</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="feature">
+            <div class="feature-copy">
+              <span class="label mono">Scenario 06</span>
+              <h3>云上下文与安全写入流</h3>
+              <p>最后一组图可以分成上下两半：上半展示 `set_cloud_region`、`list_cloud_taurus_instances`、`select_cloud_taurus_instance` 的云上下文接入；下半展示 `execute_sql` 的 `confirmation_token` 流，证明写操作不是裸奔。</p>
+            </div>
+            <div class="terminal shot-placeholder">
+              <div class="terminal-head">
+                <div class="lights"><span class="r"></span><span class="y"></span><span class="g"></span></div>
+                <div class="terminal-title mono">cloud + confirmation</div>
+              </div>
+              <div class="terminal-body mono">
+                <div><span class="prompt">tool&gt;</span> select_cloud_taurus_instance(instance_id=taurus-001)</div>
+                <div class="dim">project_id: 0d3...</div>
+                <div><span class="prompt">tool&gt;</span> execute_sql("delete from t where id = 7")</div>
+                <div class="warn">confirmation required</div>
+                <div class="dim">confirmation_token: tok_7f3...</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="section-head">
             <h2>当前对外可见的完整 Tool 面</h2>
             <p>这一页不再只放几个例子，而是按真实注册代码展示 MCP 的完整能力。当前默认会注册 23 类能力中的大部分：基础 Tool、云上下文 Tool、diagnostics Tool 常驻；`execute_sql`、`explain_sql_enhanced`、`flashback_query`、recycle bin Tool 则按配置或 capability 条件出现。</p>
           </div>
