@@ -30,6 +30,9 @@ OpenTaurus 的公开网站仓库。
 
 - `.github/workflows/deploy-site.yml`
 
+首次发布前需要在 GitHub 仓库设置中手动启用 Pages。
+建议在 `Settings > Pages` 中将 `Source` 设为 `GitHub Actions`，避免工作流在运行时尝试创建 Pages site 而触发 `Resource not accessible by integration`。
+
 ## Content Model
 
 当前首页采用：

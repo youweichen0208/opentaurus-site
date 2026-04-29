@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <title>OpenTaurus MCP | TaurusDB 能力展示</title>
+    <meta
+      name="description"
+      content="OpenTaurus MCP 页面：展示 TaurusDB 的能力探测、SQL 执行与诊断工具。"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <nav class="shell">
+      <div class="shell-inner">
+        <div class="brand">
+          <span class="brand-mark" aria-hidden="true"></span>
+          <a class="brand-name" href="./index.html">OpenTaurus</a>
+        </div>
+        <div class="nav-links">
+          <a href="./mcp.html">MCP</a>
+          <a href="./cli.html">CLI</a>
+          <a href="./cloud.html">Cloud</a>
+          <a href="./agents.html">Agent 配置</a>
+        </div>
+      </div>
+    </nav>
+
+    <main>
+      <section class="hero">
+        <div class="section-inner hero-wrap">
+          <div class="hero-copy hero-copy-left">
+            <div class="eyebrow"><span class="brand-mark" aria-hidden="true"></span><span>MCP Surface</span></div>
+            <h1>把 TaurusDB 能力作为工具暴露给 Agent</h1>
+            <p>
+              这一页只讲 MCP：它有哪些工具、如何按 capability 动态显隐、以及执行 SQL 和诊断时能返回什么样的结构化证据。
+            </p>
+          </div>
+          <div class="terminal">
+            <div class="terminal-head">
+              <div class="lights"><span class="r"></span><span class="y"></span><span class="g"></span></div>
+              <div class="terminal-title mono">tool preview</div>
+            </div>
+            <div class="terminal-body mono">
+              <div><span class="prompt">tool&gt;</span> list_taurus_features(datasource=prod-ro)</div>
+              <div class="dim">flashback_query     available / enabled</div>
+              <div class="dim">ndp_pushdown        available / enabled</div>
+              <div class="dim">parallel_query      available / disabled</div>
+              <div class="dim">statement_outline   available / disabled</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div class="divider"></div>
+
+      <section class="band">
+        <div class="section-inner">
+          <div class="feature">
+            <div class="feature-copy">
+              <span class="label mono">Capability Probe</span>
+              <h3>先探测，再决定暴露什么工具</h3>
+              <p>不要把所有 TaurusDB 特性硬编码成静态卖点。更好的展示方式是让用户看到：不同内核、不同实例能力下，工具集会发生变化。</p>
+              <div class="quote-box">建议后续补一张真实截图：Claude 或其他 Agent 调用 `list_taurus_features` 后返回结果。</div>
+            </div>
+            <div class="terminal shot-placeholder">
+              <div class="terminal-head">
+                <div class="lights"><span class="r"></span><span class="y"></span><span class="g"></span></div>
+                <div class="terminal-title mono">capability result</div>
+              </div>
+              <div class="terminal-body mono">
+                <div><span class="prompt">feature:</span> flashback_query</div>
+                <div><span class="prompt">state:</span> enabled</div>
+                <div><span class="prompt">reason:</span> kernel supports flashback window</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="feature">
+            <div class="feature-copy">
+              <span class="label mono">Execute SQL</span>
+              <h3>把 SQL 执行样例单独展示</h3>
+              <p>你现在缺的不是更多 CLI 文字，而是一个真实的 MCP 样例：Agent 发起 SQL 执行，MCP 返回结构化结果、行数、耗时、风险边界。</p>
+            </div>
+            <div class="terminal shot-placeholder">
+              <div class="terminal-head">
+                <div class="lights"><span class="r"></span><span class="y"></span><span class="g"></span></div>
+                <div class="terminal-title mono">execute sql</div>
+              </div>
+              <div class="terminal-body mono">
+                <div><span class="prompt">tool&gt;</span> execute_sql("select count(*) from orders;")</div>
+                <div class="dim">rows: 1</div>
+                <div class="dim">latency_ms: 18</div>
+                <div class="dim">result: [{"count(*)": 241905}]</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="feature">
+            <div class="feature-copy">
+              <span class="label mono">Diagnostics</span>
+              <h3>诊断结果要展示“结论 + 下一步”</h3>
+              <p>慢 SQL、锁、连接堆积不是简单列表。更适合展示的是：`diagnose_service_latency` 给出根因摘要，并指向下一步工具。</p>
+            </div>
+            <div class="terminal shot-placeholder">
+              <div class="terminal-head">
+                <div class="lights"><span class="r"></span><span class="y"></span><span class="g"></span></div>
+                <div class="terminal-title mono">diagnostics</div>
+              </div>
+              <div class="terminal-body mono">
+                <div><span class="warn">severity:</span> high</div>
+                <div>summary: slow SQL plus connection buildup</div>
+                <div class="dim">next: diagnose_slow_query / show_processlist</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <div class="footer-inner">
+        <div class="footer-copy">
+          <strong>OpenTaurus MCP</strong>
+          <span>Tool surface for TaurusDB-aware agents.</span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <title>OpenTaurus Agents | Claude / Cursor / VS Code MCP 配置</title>
+    <meta
+      name="description"
+      content="OpenTaurus Agent 配置页面：展示 Claude、Cursor、VS Code 接入 TaurusDB MCP 的方式。"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <nav class="shell">
+      <div class="shell-inner">
+        <div class="brand">
+          <span class="brand-mark" aria-hidden="true"></span>
+          <a class="brand-name" href="./index.html">OpenTaurus</a>
+        </div>
+        <div class="nav-links">
+          <a href="./mcp.html">MCP</a>
+          <a href="./cli.html">CLI</a>
+          <a href="./cloud.html">Cloud</a>
+          <a href="./agents.html">Agent 配置</a>
+        </div>
+      </div>
+    </nav>
+
+    <main>
+      <section class="hero">
+        <div class="section-inner hero-wrap">
+          <div class="hero-copy hero-copy-left">
+            <div class="eyebrow"><span class="brand-mark" aria-hidden="true"></span><span>Agent Setup</span></div>
+            <h1>把接入文档独立出来</h1>
+            <p>“如何在 Claude、Cursor、VS Code 里接入 MCP” 不应该埋在首页底部。它应该是单独页面，面向第一次配置 Agent 的用户。当前代码里已经实现的是 `@huaweicloud/taurusdb-mcp init`，而不是完整的 `taurusdb` companion CLI。</p>
+          </div>
+          <div class="terminal">
+            <div class="terminal-head">
+              <div class="lights"><span class="r"></span><span class="y"></span><span class="g"></span></div>
+              <div class="terminal-title mono">init client config</div>
+            </div>
+            <div class="terminal-body mono">
+              <div><span class="prompt">npx&gt;</span> @huaweicloud/taurusdb-mcp init --client claude</div>
+              <div class="dim">adds server: huaweicloud-taurusdb</div>
+              <div class="dim">command: npx -y @huaweicloud/taurusdb-mcp</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div class="divider"></div>
+
+      <section class="band">
+        <div class="section-inner">
+          <div class="grid-2">
+            <article class="card">
+              <span class="mode-tag mono">Claude</span>
+              <h3>已实现：`init --client claude`</h3>
+              <pre class="mono">{
+  "mcpServers": {
+    "huaweicloud-taurusdb": {
+      "command": "npx",
+      "args": ["-y", "@huaweicloud/taurusdb-mcp"]
+    }
+  }
+}</pre>
+              <p>macOS 默认写入 `~/Library/Application Support/Claude/claude_desktop_config.json`。Linux 默认写入 `~/.config/Claude/claude_desktop_config.json`。</p>
+            </article>
+
+            <article class="card">
+              <span class="mode-tag mono">Cursor / VS Code</span>
+              <h3>已实现：`init --client cursor|vscode`</h3>
+              <pre class="mono">{
+  "mcpServers": {
+    "huaweicloud-taurusdb": {
+      "command": "npx",
+      "args": ["-y", "@huaweicloud/taurusdb-mcp"]
+    }
+  }
+}</pre>
+              <pre class="mono">{
+  "servers": {
+    "huaweicloud-taurusdb": {
+      "command": "npx",
+      "args": ["-y", "@huaweicloud/taurusdb-mcp"]
+    }
+  }
+}</pre>
+              <p>Cursor 使用 `~/.cursor/mcp.json`，键名是 `mcpServers`。VS Code 使用用户级 `mcp.json`，键名是 `servers`。</p>
+            </article>
+          </div>
+
+          <div class="card" style="margin-top: 16px;">
+            <h3>当前可直接照做的接入步骤</h3>
+            <div class="table-like">
+              <div class="table-row">
+                <strong>1. 安装配置</strong>
+                <span>`npx @huaweicloud/taurusdb-mcp init --client claude`、`cursor` 或 `vscode`</span>
+              </div>
+              <div class="table-row">
+                <strong>2. 配 profile</strong>
+                <span>默认 profile 文件路径来自实现：`~/.config/taurusdb-mcp/profiles.json`，也可用环境变量覆盖。</span>
+              </div>
+              <div class="table-row">
+                <strong>3. 重启客户端</strong>
+                <span>`init` 命令只写配置，不会热更新客户端中的 MCP server 列表。</span>
+              </div>
+              <div class="table-row">
+                <strong>4. 先做 smoke</strong>
+                <span>当前仓库 README 已有 `init`。`taurusdb mcp smoke` 属于 companion CLI 目标形态，页面里应标为“规划中”。</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="card" style="margin-top: 16px;">
+            <h3>关于 OpenCode</h3>
+            <p>当前代码和测试里没有 OpenCode 专用 `init` 适配器，所以这个站点现在不应该把 OpenCode 写成“已内建支持”。更稳妥的写法是：后续补一个 OpenCode 页面，等你确认它的真实配置文件路径和 JSON 结构后再落地。</p>
+          </div>
+
+          <div class="card" style="margin-top: 16px;">
+            <h3>这个页面应该回答的问题</h3>
+            <div class="table-like">
+              <div class="table-row">
+                <strong>怎么装</strong>
+                <span>当前入口是 `npx @huaweicloud/taurusdb-mcp`，`init` 已实现，server 名固定为 `huaweicloud-taurusdb`。</span>
+              </div>
+              <div class="table-row">
+                <strong>配到哪里</strong>
+                <span>Claude、Cursor、VS Code 的配置文件路径和 JSON 根键并不相同，页面里应该按客户端分别说明。</span>
+              </div>
+              <div class="table-row">
+                <strong>怎么验</strong>
+                <span>至少验证客户端里已经出现 `huaweicloud-taurusdb`，再让 Agent 发起一次 `tools/list` 或最小连接测试。</span>
+              </div>
+              <div class="table-row">
+                <strong>哪些是规划</strong>
+                <span>`taurusdb init`、`mcp smoke`、`runbook`、`cloud validate` 当前主要存在于 README 与架构文档中，应标注为 companion CLI 路线图。</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <div class="footer-inner">
+        <div class="footer-copy">
+          <strong>OpenTaurus Agent Setup</strong>
+          <span>Configuration guidance for MCP-capable clients.</span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <title>OpenTaurus Cloud | CES / DAS / Context Export</title>
+    <meta
+      name="description"
+      content="OpenTaurus Cloud 页面：展示 TaurusDB 云端证据与 context export。"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <nav class="shell">
+      <div class="shell-inner">
+        <div class="brand">
+          <span class="brand-mark" aria-hidden="true"></span>
+          <a class="brand-name" href="./index.html">OpenTaurus</a>
+        </div>
+        <div class="nav-links">
+          <a href="./mcp.html">MCP</a>
+          <a href="./cli.html">CLI</a>
+          <a href="./cloud.html">Cloud</a>
+          <a href="./agents.html">Agent 配置</a>
+        </div>
+      </div>
+    </nav>
+
+    <main>
+      <section class="hero">
+        <div class="section-inner hero-wrap">
+          <div class="hero-copy hero-copy-left">
+            <div class="eyebrow"><span class="brand-mark" aria-hidden="true"></span><span>Cloud Evidence</span></div>
+            <h1>把 TaurusDB 云端证据链单独讲清楚</h1>
+            <p>这一页展示的不是 MCP 调用本身，而是云端实例解析、CES、DAS、权限验证和 context export 这些“本地 SQL 看不到”的部分。</p>
+          </div>
+          <div class="terminal shot-placeholder">
+            <div class="terminal-head">
+              <div class="lights"><span class="r"></span><span class="y"></span><span class="g"></span></div>
+              <div class="terminal-title mono">cloud validate</div>
+            </div>
+            <div class="terminal-body mono">
+              <div><span class="prompt">taurusdb&gt;</span> cloud validate --profile prod-ro</div>
+              <div><span class="prompt">✓</span> region cn-north-4</div>
+              <div><span class="prompt">✓</span> instance taurus-prod-01</div>
+              <div><span class="prompt">✓</span> CES metrics cpu / qps / connections</div>
+              <div><span class="warn">⚑</span> DAS full-sql partial permissions</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div class="divider"></div>
+
+      <section class="band">
+        <div class="section-inner">
+          <div class="triptych">
+            <article class="card">
+              <span class="mode-tag mono">Instance</span>
+              <h3>实例与节点解析</h3>
+              <p>展示 region、project、instance_id、node_id 如何与本地 profile 关联。</p>
+            </article>
+            <article class="card">
+              <span class="mode-tag mono">Metrics</span>
+              <h3>CES / DAS 证据</h3>
+              <p>用真实截图证明你能拿到连接数、QPS、慢 SQL、Top SQL 等云侧信号。</p>
+            </article>
+            <article class="card">
+              <span class="mode-tag mono">Export</span>
+              <h3>上下文导出</h3>
+              <p>把脱敏后的实例信息、指标摘要和诊断结论导出给 Agent、工单或交付文档。</p>
+            </article>
+          </div>
+
+          <div class="card" style="margin-top: 16px;">
+            <h3>你现在缺的云端素材</h3>
+            <ul class="plain-list">
+              <li>`cloud validate` 成功截图</li>
+              <li>一张 CES 指标截图，最好能对应一次真实告警或性能波动</li>
+              <li>一张 DAS 慢 SQL 或 Top SQL 截图</li>
+              <li>一次 `context export` 产物节选</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <div class="footer-inner">
+        <div class="footer-copy">
+          <strong>OpenTaurus Cloud</strong>
+          <span>Cloud-side evidence for TaurusDB diagnostics.</span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

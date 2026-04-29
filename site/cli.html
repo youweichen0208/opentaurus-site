@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <title>OpenTaurus CLI | Companion CLI</title>
+    <meta
+      name="description"
+      content="OpenTaurus CLI 页面：说明 init、smoke、runbook 与 MCP 协同方式。"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <nav class="shell">
+      <div class="shell-inner">
+        <div class="brand">
+          <span class="brand-mark" aria-hidden="true"></span>
+          <a class="brand-name" href="./index.html">OpenTaurus</a>
+        </div>
+        <div class="nav-links">
+          <a href="./mcp.html">MCP</a>
+          <a href="./cli.html">CLI</a>
+          <a href="./cloud.html">Cloud</a>
+          <a href="./agents.html">Agent 配置</a>
+        </div>
+      </div>
+    </nav>
+
+    <main>
+      <section class="hero">
+        <div class="section-inner hero-wrap">
+          <div class="hero-copy hero-copy-left">
+            <div class="eyebrow"><span class="brand-mark" aria-hidden="true"></span><span>Companion CLI</span></div>
+            <h1>CLI 不是第二个 SQL 客户端</h1>
+            <p>这一页只讲 companion CLI 在做什么：初始化配置、验证 MCP、执行 smoke、编排 runbook、导出上下文，而不是和 MCP 页面混写。需要注意的是，这一层目前主要还是设计目标，已落地的稳定入口仍然是 `@huaweicloud/taurusdb-mcp` 包本身。</p>
+          </div>
+          <div class="terminal">
+            <div class="terminal-head">
+              <div class="lights"><span class="r"></span><span class="y"></span><span class="g"></span></div>
+              <div class="terminal-title mono">taurusdb cli</div>
+            </div>
+            <div class="terminal-body mono">
+              <div><span class="prompt">taurusdb&gt;</span> mcp smoke --profile prod-ro</div>
+              <div><span class="prompt">✓</span> server ok</div>
+              <div><span class="prompt">✓</span> tools/list ok</div>
+              <div><span class="prompt">✓</span> datasource probe ok</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div class="divider"></div>
+
+      <section class="band">
+        <div class="section-inner">
+          <div class="triptych">
+            <article class="card">
+              <span class="mode-tag mono">Init</span>
+              <h3>生成配置</h3>
+              <p>面向 Claude、Cursor、VS Code 或其他客户端生成 MCP 配置，降低初次接入成本。</p>
+            </article>
+            <article class="card">
+              <span class="mode-tag mono">Smoke</span>
+              <h3>验证链路</h3>
+              <p>一条命令验证 server、tools/list、profile 和 capability probe，适合联调与验收。</p>
+            </article>
+            <article class="card">
+              <span class="mode-tag mono">Runbook</span>
+              <h3>编排诊断</h3>
+              <p>把多次 MCP 调用收束成对人类更友好的报告，而不是要求每个人手工拼命令。</p>
+            </article>
+          </div>
+
+          <div class="card" style="margin-top: 16px;">
+            <h3>建议保留的 CLI 页面结构</h3>
+            <div class="table-like">
+              <div class="table-row">
+                <strong>当前已实现</strong>
+                <span>`npx @huaweicloud/taurusdb-mcp init --client claude|cursor|vscode`，以及默认 `npx @huaweicloud/taurusdb-mcp` 直接启动 stdio MCP server。</span>
+              </div>
+              <div class="table-row">
+                <strong>规划中的验证</strong>
+                <span>`taurusdb mcp smoke --profile prod-ro`，当前在 README / 架构文档里已定义，但不该在现网页里写成“已经发布”。</span>
+              </div>
+              <div class="table-row">
+                <strong>规划中的工具透传</strong>
+                <span>`taurusdb mcp call diagnose_service_latency --input latency.json`，定位是调试和 CI，而不是给 DBA 的日常主入口。</span>
+              </div>
+              <div class="table-row">
+                <strong>规划中的报告导出</strong>
+                <span>`taurusdb runbook latency --since 15m --report latency.md`，通过 MCP Tool 编排输出人类可读报告。</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <div class="footer-inner">
+        <div class="footer-copy">
+          <strong>OpenTaurus CLI</strong>
+          <span>Verification, orchestration, and local operator workflow.</span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>
