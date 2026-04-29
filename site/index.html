@@ -6,10 +6,10 @@
       name="viewport"
       content="width=device-width, initial-scale=1, viewport-fit=cover"
     />
-    <title>OpenTaurus | TaurusDB 的 MCP、CLI 与 Cloud Evidence</title>
+    <title>OpenTaurus | TaurusDB 的 MCP、CLI 与 Agent 配置</title>
     <meta
       name="description"
-      content="OpenTaurus 是面向 TaurusDB 的 MCP Server、Companion CLI 与 Cloud Evidence 工具链。"
+      content="OpenTaurus 是面向 TaurusDB 的 MCP Server、Companion CLI 与 Agent 配置入口。"
     />
     <link rel="stylesheet" href="./styles.css" />
   </head>
@@ -23,7 +23,6 @@
         <div class="nav-links">
           <a href="./mcp.html">MCP</a>
           <a href="./cli.html">CLI</a>
-          <a href="./cloud.html">Cloud</a>
           <a href="./agents.html">Agent 配置</a>
           <a href="https://github.com/youweichen0208/taurus-mcp-server" target="_blank" rel="noopener noreferrer">GitHub</a>
         </div>
@@ -59,9 +58,9 @@
             </div>
             <div class="terminal-body mono">
               <div><span class="prompt">1.</span> MCP: 给 Claude / Cursor / VS Code 的工具面</div>
-              <div><span class="prompt">2.</span> CLI: init / smoke / runbook / context export</div>
-              <div><span class="prompt">3.</span> Cloud: CES / DAS / 实例解析 / 验证链路</div>
-              <div><span class="prompt">4.</span> Agents: Claude、OpenCode 等客户端接入方式</div>
+              <div><span class="prompt">2.</span> MCP 内含 Cloud evidence: CES / DAS / 实例解析</div>
+              <div><span class="prompt">3.</span> CLI: init / smoke / runbook / context export</div>
+              <div><span class="prompt">4.</span> Agents: Claude、Cursor、VS Code 接入方式</div>
             </div>
           </div>
         </div>
@@ -92,15 +91,8 @@
             </article>
 
             <article class="card nav-card">
-              <span class="mode-tag mono">Cloud Evidence</span>
-              <h3>云端证据链</h3>
-              <p>单独展示 TaurusDB 云实例解析、CES、DAS、权限验证与 context export。</p>
-              <a class="text-link" href="./cloud.html">进入 Cloud 页面</a>
-            </article>
-
-            <article class="card nav-card">
               <span class="mode-tag mono">Agent Setup</span>
-              <h3>Claude / OpenCode 配置</h3>
+              <h3>Claude / Cursor / VS Code 配置</h3>
               <p>把 “如何在 Agent 中接入 MCP” 变成独立入口，避免和能力展示混在一起。</p>
               <a class="text-link" href="./agents.html">进入配置页面</a>
             </article>
@@ -127,7 +119,7 @@
               </ul>
             </article>
             <article class="card">
-              <h3>Cloud 样例截图待补</h3>
+              <h3>MCP 云证据截图待补</h3>
               <ul class="plain-list">
                 <li>`cloud validate` 成功输出</li>
                 <li>CES / DAS 证据汇总</li>
@@ -138,7 +130,7 @@
               <h3>Agent 配置截图待补</h3>
               <ul class="plain-list">
                 <li>Claude Desktop MCP 配置</li>
-                <li>OpenCode MCP 配置</li>
+                <li>Cursor / VS Code MCP 配置</li>
                 <li>CLI `init` 生成配置后的目录结构</li>
               </ul>
             </article>
@@ -156,7 +148,6 @@
         <div class="footer-links">
           <a href="./mcp.html">MCP</a>
           <a href="./cli.html">CLI</a>
-          <a href="./cloud.html">Cloud</a>
           <a href="./agents.html">Agent 配置</a>
         </div>
       </div>
