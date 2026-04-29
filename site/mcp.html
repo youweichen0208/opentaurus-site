@@ -139,6 +139,38 @@
             </div>
           </div>
 
+          <div class="grid-2" style="margin-bottom: 42px;">
+            <article class="card">
+              <span class="mode-tag mono">Response Shape</span>
+              <h3>客户实际会看到什么返回结构</h3>
+              <pre class="mono">{
+  "ok": true,
+  "summary": "Resolved 5 datasource profiles.",
+  "data": {
+    "items": [...],
+    "default_datasource": "prod-ro"
+  },
+  "metadata": {
+    "task_id": "tsk_..."
+  }
+}</pre>
+              <p>页面上更值得强调的是统一 envelope：`ok`、`summary`、`data`、`metadata.task_id`，而不是把每个 Tool 讲成彼此割裂的小功能。</p>
+            </article>
+
+            <article class="card">
+              <span class="mode-tag mono">Guardrail</span>
+              <h3>写操作是两阶段确认，不是直接放行</h3>
+              <pre class="mono">{
+  "ok": false,
+  "error": {
+    "code": "CONFIRMATION_REQUIRED",
+    "confirmation_token": "tok_..."
+  }
+}</pre>
+              <p>`execute_sql` 和 `restore_recycle_bin_table` 都遵循 token confirmation 流。客户页应该明确这一点，这比单纯说“支持 mutation”更重要。</p>
+            </article>
+          </div>
+
           <div class="feature">
             <div class="feature-copy">
               <span class="label mono">Capability Probe</span>
@@ -163,7 +195,7 @@
             <div class="feature-copy">
               <span class="label mono">Execute SQL</span>
               <h3>把 SQL 执行样例单独展示</h3>
-              <p>你现在缺的不是更多 CLI 文字，而是一个真实的 MCP 样例：Agent 发起 SQL 执行，MCP 返回结构化结果、行数、耗时、风险边界。</p>
+              <p>你现在缺的不是更多 CLI 文字，而是一个真实的 MCP 样例：Agent 发起 SQL 执行，MCP 返回结构化结果、行数、耗时、风险边界。只读查询和 mutation 应当分开展示。</p>
             </div>
             <div class="terminal shot-placeholder">
               <div class="terminal-head">
@@ -175,6 +207,26 @@
                 <div class="dim">rows: 1</div>
                 <div class="dim">latency_ms: 18</div>
                 <div class="dim">result: [{"count(*)": 241905}]</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="feature">
+            <div class="feature-copy">
+              <span class="label mono">Confirmation Flow</span>
+              <h3>变更 SQL 要把 confirmation token 流展示出来</h3>
+              <p>当前实现不是“先 explain 再确认”，而是命中 guardrail 后直接返回 `confirmation_token`。这个交互模式很值得在客户页里单独展示，因为它说明了安全模型。</p>
+            </div>
+            <div class="terminal shot-placeholder">
+              <div class="terminal-head">
+                <div class="lights"><span class="r"></span><span class="y"></span><span class="g"></span></div>
+                <div class="terminal-title mono">mutation confirmation</div>
+              </div>
+              <div class="terminal-body mono">
+                <div><span class="prompt">tool&gt;</span> execute_sql("delete from t where id = 7")</div>
+                <div><span class="warn">blocked:</span> confirmation required</div>
+                <div class="dim">confirmation_token: tok_7f3...</div>
+                <div class="dim">next: retry with same sql + confirmation_token</div>
               </div>
             </div>
           </div>

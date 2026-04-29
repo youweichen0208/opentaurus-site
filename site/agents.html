@@ -140,6 +140,36 @@
               </div>
             </div>
           </div>
+
+          <div class="card" style="margin-top: 16px;">
+            <h3>常见报错与排查</h3>
+            <div class="table-like">
+              <div class="table-row">
+                <strong>看不到 server</strong>
+                <span>先确认 `init` 写入的 server 名是否是 `huaweicloud-taurusdb`，然后重启 Claude、Cursor 或 VS Code。`init` 不会热更新客户端列表。</span>
+              </div>
+              <div class="table-row">
+                <strong>`npx` 找不到包</strong>
+                <span>通常是本机 Node / npm 环境问题。先手动执行 `npx -y @huaweicloud/taurusdb-mcp --version`，确认客户端外也能拉起命令。</span>
+              </div>
+              <div class="table-row">
+                <strong>profile 未解析</strong>
+                <span>检查 `~/.config/taurusdb-mcp/profiles.json` 是否存在，字段是否正确；如果你用了自定义路径，确认环境变量已经传到客户端启动环境。</span>
+              </div>
+              <div class="table-row">
+                <strong>tools 有了但查库失败</strong>
+                <span>这通常不是 MCP 配置问题，而是 datasource、database、网络连通性或数据库权限问题。优先先做 `list_data_sources`、`list_databases`、`ping` 这三个最小检查。</span>
+              </div>
+              <div class="table-row">
+                <strong>mutation 不执行</strong>
+                <span>先确认服务端是否开启 mutations；其次确认你是否按原样重试并带上 `confirmation_token`。token 与 SQL 文本、datasource、database 绑定，换了内容就会失效。</span>
+              </div>
+              <div class="table-row">
+                <strong>云证据不可用</strong>
+                <span>先检查 region、AK/SK、实例选择是否已设置，再看是否缺 CES / DAS 所需权限。云证据问题不等于本地 SQL 查询不可用。</span>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
     </main>
