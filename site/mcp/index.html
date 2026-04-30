@@ -72,33 +72,41 @@
             </div>
             <div class="agent-panel shot-placeholder">
               <div class="agent-head">
-                <strong>Cursor / Claude Agent</strong>
-                <span class="mono">connected to huaweicloud-taurusdb</span>
+                <strong>Knowledge Agent</strong>
+                <span class="mono">workspace: OpenTaurus / source: huaweicloud-taurusdb</span>
               </div>
               <div class="agent-body">
-                <div class="chat-row user">
-                  <div class="chat-bubble">帮我确认这个环境已经接上生产只读库，并看一下 orders 表结构。</div>
-                </div>
-                <div class="chat-row agent">
-                  <div class="chat-bubble">我先检查可用 datasource，然后读取 `shop.orders` 的 schema。</div>
-                </div>
-                <div class="tool-card">
-                  <div class="tool-meta">
-                    <span class="tool-name mono">tool: list_data_sources</span>
-                    <span class="tool-state">ok</span>
+                <div class="agent-layout">
+                  <div class="agent-convo">
+                    <div class="chat-row user">
+                      <div class="chat-bubble">帮我确认这个环境已经接上生产只读库，并看一下 orders 表结构。</div>
+                    </div>
+                    <div class="assistant-block">
+                      <div class="assistant-title">智能问答</div>
+                      <div class="chat-row agent">
+                        <div class="chat-bubble">已连接到生产只读 datasource。我先核对可用数据源，再读取 `shop.orders` 的 schema，确认这个知识源可以被正常访问。</div>
+                      </div>
+                    </div>
+                    <div class="agent-note">这种布局更像知识问答助手：左边是用户问题与智能体回答，右边是它调用 MCP 得到的结构化依据。</div>
                   </div>
-                  <pre class="mono">default_datasource: prod-ro
+                  <div class="agent-side">
+                    <div class="tool-card">
+                      <div class="tool-meta">
+                        <span class="tool-name mono">tool: list_data_sources</span>
+                        <span class="tool-state">ok</span>
+                      </div>
+                      <pre class="mono">default_datasource: prod-ro
 items:
   - prod-ro
   - staging-ro
   - local-dev</pre>
-                </div>
-                <div class="tool-card">
-                  <div class="tool-meta">
-                    <span class="tool-name mono">tool: describe_table</span>
-                    <span class="tool-state">shop.orders</span>
-                  </div>
-                  <pre class="mono">columns:
+                    </div>
+                    <div class="tool-card">
+                      <div class="tool-meta">
+                        <span class="tool-name mono">tool: describe_table</span>
+                        <span class="tool-state">shop.orders</span>
+                      </div>
+                      <pre class="mono">columns:
   - id bigint primary key
   - user_id bigint
   - amount decimal(12,2)
@@ -106,8 +114,17 @@ items:
 indexes:
   - idx_orders_user_id
   - idx_orders_created_at</pre>
+                    </div>
+                    <div class="source-card">
+                      <h4>本轮引用依据</h4>
+                      <ul class="source-list">
+                        <li>默认 datasource 已解析为 `prod-ro`</li>
+                        <li>`shop.orders` 可读取到列和索引信息</li>
+                        <li>说明 Agent 不只是回答文本，而是在调用真实 MCP 工具</li>
+                      </ul>
+                    </div>
+                  </div>
                 </div>
-                <div class="agent-note">这一块更适合替换成真实 Agent 截图，而不是 shell。因为客户更容易把“智能体通过 MCP 调库”理解成实际使用场景。</div>
               </div>
             </div>
           </div>
