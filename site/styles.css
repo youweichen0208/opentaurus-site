@@ -439,31 +439,53 @@ section.band {
 .agent-demo > * {
   opacity: 0;
   transform: translateY(10px);
-  animation: agentReveal 9s ease-in-out infinite;
+  animation: agentReveal 10s ease-in-out infinite;
 }
 
-.agent-demo .step-1 {
-  animation-delay: 0.3s;
+.agent-demo .step-1 { animation-delay: 0.2s; }
+.agent-demo .step-2 { animation-delay: 1.2s; }
+.agent-demo .step-3 { animation-delay: 2.7s; }
+.agent-demo .step-4 { animation-delay: 4.6s; }
+.agent-demo .step-5 { animation-delay: 6.3s; }
+.agent-demo .step-6 { animation-delay: 7.7s; }
+
+.agent-composer {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 10px;
+  padding: 10px;
+  border-radius: 14px;
+  border: 1px solid rgba(237, 236, 236, 0.08);
+  background: rgba(255, 255, 255, 0.04);
 }
 
-.agent-demo .step-2 {
-  animation-delay: 1.4s;
+.composer-input {
+  min-height: 42px;
+  display: flex;
+  align-items: center;
+  padding: 0 12px;
+  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.2);
+  color: rgba(237, 236, 236, 0.92);
+  border: 1px solid rgba(237, 236, 236, 0.06);
+  font-size: 0.88rem;
 }
 
-.agent-demo .step-3 {
-  animation-delay: 3s;
-}
-
-.agent-demo .step-4 {
-  animation-delay: 4.7s;
-}
-
-.agent-demo .step-5 {
-  animation-delay: 6.3s;
-}
-
-.agent-demo .step-6 {
-  animation-delay: 7.3s;
+.composer-send {
+  min-width: 88px;
+  min-height: 42px;
+  padding: 0 14px;
+  border-radius: 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #d1783b, #9d4e1e);
+  color: #fff6ef;
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  box-shadow: 0 0 0 0 rgba(209, 120, 59, 0.45);
+  animation: sendPulse 1.6s ease-in-out infinite;
 }
 
 .assistant-block {
@@ -496,6 +518,33 @@ section.band {
   border-radius: 14px;
   font-size: 0.9rem;
   line-height: 1.55;
+}
+
+.stream-block {
+  display: grid;
+  gap: 8px;
+}
+
+.stream-line {
+  opacity: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  width: 0;
+  animation:
+    streamReveal 10s linear infinite,
+    typeLine 1.05s steps(42, end) infinite;
+}
+
+.stream-line.line-1 {
+  animation-delay: 1.5s, 1.5s;
+}
+
+.stream-line.line-2 {
+  animation-delay: 2.35s, 2.35s;
+}
+
+.stream-line.line-3 {
+  animation-delay: 3.15s, 3.15s;
 }
 
 .chat-row.user .chat-bubble {
@@ -555,6 +604,26 @@ section.band {
   box-shadow: 0 0 0 1px rgba(121, 192, 255, 0.16), 0 0 24px rgba(121, 192, 255, 0.1);
 }
 
+.tool-card pre span {
+  display: block;
+  opacity: 0;
+  transform: translateY(8px);
+  animation: toolLine 10s ease-in-out infinite;
+}
+
+.tool-card.step-3 pre span:nth-child(1) { animation-delay: 3.15s; }
+.tool-card.step-3 pre span:nth-child(2) { animation-delay: 3.45s; }
+.tool-card.step-3 pre span:nth-child(3) { animation-delay: 3.75s; }
+.tool-card.step-3 pre span:nth-child(4) { animation-delay: 4.05s; }
+
+.tool-card.step-4 pre span:nth-child(1) { animation-delay: 5.05s; }
+.tool-card.step-4 pre span:nth-child(2) { animation-delay: 5.35s; }
+.tool-card.step-4 pre span:nth-child(3) { animation-delay: 5.65s; }
+.tool-card.step-4 pre span:nth-child(4) { animation-delay: 5.95s; }
+.tool-card.step-4 pre span:nth-child(5) { animation-delay: 6.25s; }
+.tool-card.step-4 pre span:nth-child(6) { animation-delay: 6.55s; }
+.tool-card.step-4 pre span:nth-child(7) { animation-delay: 6.85s; }
+
 .agent-note {
   padding: 12px 14px;
   border-radius: 12px;
@@ -596,6 +665,32 @@ section.band {
   }
   8%,
   100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes sendPulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(209, 120, 59, 0.18); }
+  50% { box-shadow: 0 0 0 10px rgba(209, 120, 59, 0); }
+}
+
+@keyframes streamReveal {
+  0%, 8% { opacity: 0; }
+  12%, 100% { opacity: 1; }
+}
+
+@keyframes typeLine {
+  0%, 8% { width: 0; }
+  65%, 100% { width: 100%; }
+}
+
+@keyframes toolLine {
+  0%, 8% {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  12%, 100% {
     opacity: 1;
     transform: translateY(0);
   }
