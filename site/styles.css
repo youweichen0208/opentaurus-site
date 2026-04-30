@@ -392,10 +392,9 @@ section.band {
 .agent-panel {
   overflow: hidden;
   border-radius: 18px;
-  border: 1px solid rgba(38, 37, 30, 0.12);
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(250, 247, 241, 0.96));
-  box-shadow: 0 30px 90px rgba(38, 37, 30, 0.12), 0 4px 14px rgba(38, 37, 30, 0.05);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  background: var(--terminal);
+  box-shadow: 0 30px 90px rgba(38, 37, 30, 0.14), 0 4px 14px rgba(38, 37, 30, 0.06);
 }
 
 .agent-head {
@@ -404,17 +403,18 @@ section.band {
   justify-content: space-between;
   gap: 10px;
   padding: 14px 16px;
-  border-bottom: 1px solid rgba(38, 37, 30, 0.08);
-  background: rgba(255, 255, 255, 0.65);
+  border-bottom: 1px solid rgba(237, 236, 236, 0.08);
+  background: rgba(255, 255, 255, 0.04);
 }
 
 .agent-head strong {
   font-size: 0.92rem;
   letter-spacing: -0.02em;
+  color: var(--terminal-text);
 }
 
 .agent-head span {
-  color: var(--text-secondary);
+  color: rgba(237, 236, 236, 0.5);
   font-size: 0.78rem;
 }
 
@@ -441,23 +441,24 @@ section.band {
 }
 
 .chat-row.user .chat-bubble {
-  background: var(--text);
-  color: var(--bg);
+  background: rgba(237, 236, 236, 0.1);
+  color: var(--terminal-text);
   border-bottom-right-radius: 6px;
+  border: 1px solid rgba(237, 236, 236, 0.08);
 }
 
 .chat-row.agent .chat-bubble {
-  background: rgba(38, 37, 30, 0.05);
-  color: var(--text);
-  border: 1px solid rgba(38, 37, 30, 0.08);
+  background: rgba(255, 255, 255, 0.04);
+  color: rgba(237, 236, 236, 0.88);
+  border: 1px solid rgba(237, 236, 236, 0.08);
   border-bottom-left-radius: 6px;
 }
 
 .tool-card {
   padding: 14px;
   border-radius: 14px;
-  border: 1px solid rgba(38, 37, 30, 0.1);
-  background: rgba(255, 255, 255, 0.88);
+  border: 1px solid rgba(237, 236, 236, 0.08);
+  background: rgba(255, 255, 255, 0.04);
 }
 
 .tool-meta {
@@ -472,31 +473,32 @@ section.band {
   font-size: 0.8rem;
   font-weight: 700;
   letter-spacing: 0.02em;
-  color: var(--text);
+  color: var(--terminal-text);
 }
 
 .tool-state {
   font-size: 0.76rem;
-  color: var(--text-secondary);
+  color: rgba(237, 236, 236, 0.5);
 }
 
 .tool-card pre {
   margin: 0;
   padding: 12px;
   border-radius: 10px;
-  background: #161614;
+  background: rgba(0, 0, 0, 0.24);
   color: var(--terminal-text);
   font-size: 0.78rem;
   line-height: 1.68;
   overflow: auto;
+  border: 1px solid rgba(237, 236, 236, 0.06);
 }
 
 .agent-note {
   padding: 12px 14px;
   border-radius: 12px;
-  background: rgba(201, 106, 43, 0.08);
-  border: 1px solid rgba(201, 106, 43, 0.14);
-  color: #5f4a37;
+  background: rgba(201, 106, 43, 0.12);
+  border: 1px solid rgba(201, 106, 43, 0.18);
+  color: rgba(255, 224, 203, 0.92);
   font-size: 0.84rem;
 }
 
