@@ -497,6 +497,7 @@ section.band {
   border-radius: 14px;
   border: 1px solid rgba(237, 236, 236, 0.08);
   background: rgba(255, 255, 255, 0.04);
+  color: rgba(237, 236, 236, 0.92);
 }
 
 .assistant-title {
@@ -527,10 +528,11 @@ section.band {
 .stream-block {
   display: grid;
   gap: 8px;
+  color: rgba(237, 236, 236, 0.92);
 }
 
 .stream-line {
-  color: rgba(237, 236, 236, 0.88);
+  color: rgba(237, 236, 236, 0.92);
   white-space: pre-wrap;
 }
 
