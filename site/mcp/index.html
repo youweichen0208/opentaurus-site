@@ -76,21 +76,21 @@
                 <span class="mono">workspace: OpenTaurus / source: huaweicloud-taurusdb</span>
               </div>
               <div class="agent-body">
-                <div class="agent-layout">
+                <div class="agent-layout agent-demo">
                   <div class="agent-convo">
-                    <div class="chat-row user">
+                    <div class="chat-row user step-1">
                       <div class="chat-bubble">帮我确认这个环境已经接上生产只读库，并看一下 orders 表结构。</div>
                     </div>
-                    <div class="assistant-block">
+                    <div class="assistant-block step-2">
                       <div class="assistant-title">智能问答</div>
                       <div class="chat-row agent">
                         <div class="chat-bubble">已连接到生产只读 datasource。我先核对可用数据源，再读取 `shop.orders` 的 schema，确认这个知识源可以被正常访问。</div>
                       </div>
                     </div>
-                    <div class="agent-note">这种布局更像知识问答助手：左边是用户问题与智能体回答，右边是它调用 MCP 得到的结构化依据。</div>
+                    <div class="agent-note step-6">这种布局更像知识问答助手：左边是用户问题与智能体回答，右边是它调用 MCP 得到的结构化依据。</div>
                   </div>
                   <div class="agent-side">
-                    <div class="tool-card">
+                    <div class="tool-card active-glow step-3">
                       <div class="tool-meta">
                         <span class="tool-name mono">tool: list_data_sources</span>
                         <span class="tool-state">ok</span>
@@ -101,7 +101,7 @@ items:
   - staging-ro
   - local-dev</pre>
                     </div>
-                    <div class="tool-card">
+                    <div class="tool-card active-glow step-4">
                       <div class="tool-meta">
                         <span class="tool-name mono">tool: describe_table</span>
                         <span class="tool-state">shop.orders</span>
@@ -115,7 +115,7 @@ indexes:
   - idx_orders_user_id
   - idx_orders_created_at</pre>
                     </div>
-                    <div class="source-card">
+                    <div class="source-card step-5">
                       <h4>本轮引用依据</h4>
                       <ul class="source-list">
                         <li>默认 datasource 已解析为 `prod-ro`</li>

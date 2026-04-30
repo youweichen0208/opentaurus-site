@@ -436,6 +436,36 @@ section.band {
   gap: 12px;
 }
 
+.agent-demo > * {
+  opacity: 0;
+  transform: translateY(10px);
+  animation: agentReveal 9s ease-in-out infinite;
+}
+
+.agent-demo .step-1 {
+  animation-delay: 0.3s;
+}
+
+.agent-demo .step-2 {
+  animation-delay: 1.4s;
+}
+
+.agent-demo .step-3 {
+  animation-delay: 3s;
+}
+
+.agent-demo .step-4 {
+  animation-delay: 4.7s;
+}
+
+.agent-demo .step-5 {
+  animation-delay: 6.3s;
+}
+
+.agent-demo .step-6 {
+  animation-delay: 7.3s;
+}
+
 .assistant-block {
   padding: 14px;
   border-radius: 14px;
@@ -521,6 +551,10 @@ section.band {
   border: 1px solid rgba(237, 236, 236, 0.06);
 }
 
+.tool-card.active-glow {
+  box-shadow: 0 0 0 1px rgba(121, 192, 255, 0.16), 0 0 24px rgba(121, 192, 255, 0.1);
+}
+
 .agent-note {
   padding: 12px 14px;
   border-radius: 12px;
@@ -553,6 +587,18 @@ section.band {
 
 .source-list li + li {
   margin-top: 6px;
+}
+
+@keyframes agentReveal {
+  0% {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  8%,
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 footer {
