@@ -95,7 +95,7 @@
                       <ul class="answer-list">
                         <li>当前会话已经接入生产只读 datasource，默认数据源为 `prod-ro`。</li>
                         <li>`shop.orders` 表结构已成功读取，关键字段包括 `id`、`user_id`、`amount`、`created_at`。</li>
-                        <li>已识别 `idx_orders_user_id` 和 `idx_orders_created_at` 两个索引，后续可以继续分析查询是否命中索引。</li>
+                        <li>已识别 `idx_orders_user_id` 和 `idx_orders_created_at` 两个索引；按当前业务问题，通常会先关注 `user_id` 相关查询是否命中索引。</li>
                       </ul>
                     </div>
                   </div>
@@ -134,7 +134,7 @@
                       <ul class="source-list">
                         <li>默认 datasource 已解析为 `prod-ro`</li>
                         <li>`shop.orders` 可读取到列和索引信息</li>
-                        <li>说明 Agent 不只是回答文本，而是在调用真实 MCP 工具</li>
+                        <li>当前业务问题更偏向用户维度检索，因此先关注 `idx_orders_user_id`</li>
                       </ul>
                     </div>
                   </div>
