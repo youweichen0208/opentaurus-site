@@ -98,14 +98,29 @@
                         <span class="tool-name mono">tool: list_data_sources</span>
                         <span class="tool-state">ok</span>
                       </div>
-                      <pre class="mono"><span>default_datasource: prod-ro</span><span>items:</span><span>  - prod-ro</span><span>  - staging-ro</span></pre>
+                      <div class="tool-lines mono">
+                        <div class="tool-line">default_datasource: prod-ro</div>
+                        <div class="tool-line">items:</div>
+                        <div class="tool-line">  - prod-ro</div>
+                        <div class="tool-line">  - staging-ro</div>
+                        <div class="tool-line">  - local-dev</div>
+                      </div>
                     </div>
                     <div class="tool-card active-glow step-4">
                       <div class="tool-meta">
                         <span class="tool-name mono">tool: describe_table</span>
                         <span class="tool-state">shop.orders</span>
                       </div>
-                      <pre class="mono"><span>columns:</span><span>  - id bigint primary key</span><span>  - user_id bigint</span><span>  - amount decimal(12,2)</span><span>indexes:</span><span>  - idx_orders_user_id</span><span>  - idx_orders_created_at</span></pre>
+                      <div class="tool-lines mono">
+                        <div class="tool-line">columns:</div>
+                        <div class="tool-line">  - id bigint primary key</div>
+                        <div class="tool-line">  - user_id bigint</div>
+                        <div class="tool-line">  - amount decimal(12,2)</div>
+                        <div class="tool-line">  - created_at datetime</div>
+                        <div class="tool-line">indexes:</div>
+                        <div class="tool-line">  - idx_orders_user_id</div>
+                        <div class="tool-line">  - idx_orders_created_at</div>
+                      </div>
                     </div>
                     <div class="source-card step-5">
                       <h4>本轮引用依据</h4>
