@@ -530,25 +530,8 @@ section.band {
 }
 
 .stream-line {
-  opacity: 0;
-  overflow: hidden;
-  white-space: nowrap;
-  width: 0;
-  animation:
-    streamReveal 10s linear infinite,
-    typeLine 1.05s steps(42, end) infinite;
-}
-
-.stream-line.line-1 {
-  animation-delay: 1.5s, 1.5s;
-}
-
-.stream-line.line-2 {
-  animation-delay: 2.35s, 2.35s;
-}
-
-.stream-line.line-3 {
-  animation-delay: 3.15s, 3.15s;
+  color: rgba(237, 236, 236, 0.88);
+  white-space: pre-wrap;
 }
 
 .answer-card {
@@ -720,16 +703,6 @@ section.band {
 @keyframes sendPulse {
   0%, 100% { box-shadow: 0 0 0 0 rgba(209, 120, 59, 0.18); }
   50% { box-shadow: 0 0 0 10px rgba(209, 120, 59, 0); }
-}
-
-@keyframes streamReveal {
-  0%, 8% { opacity: 0; }
-  12%, 100% { opacity: 1; }
-}
-
-@keyframes typeLine {
-  0%, 8% { width: 0; }
-  65%, 100% { width: 100%; }
 }
 
 @keyframes toolLine {
