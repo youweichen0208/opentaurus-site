@@ -80,7 +80,7 @@
                   <div class="agent-convo">
                     <div class="agent-composer step-1">
                       <div class="composer-input">帮我确认这个环境已经接上生产只读库，并看一下 orders 表结构。</div>
-                      <div class="composer-send">响应中</div>
+                      <div class="composer-send" aria-label="发送"></div>
                     </div>
                     <div class="assistant-block step-2">
                       <div class="assistant-title">智能问答</div>
@@ -90,7 +90,14 @@
                         <div class="stream-line line-3">下面是本轮通过 MCP 调用返回的结构化依据。</div>
                       </div>
                     </div>
-                    <div class="agent-note step-6">这种布局更像知识问答助手：左边是用户问题与智能体回答，右边是它调用 MCP 得到的结构化依据。</div>
+                    <div class="answer-card step-6">
+                      <div class="answer-title">最终回答</div>
+                      <ul class="answer-list">
+                        <li>当前会话已经接入生产只读 datasource，默认数据源为 `prod-ro`。</li>
+                        <li>`shop.orders` 表结构已成功读取，关键字段包括 `id`、`user_id`、`amount`、`created_at`。</li>
+                        <li>已识别 `idx_orders_user_id` 和 `idx_orders_created_at` 两个索引，后续可以继续分析查询是否命中索引。</li>
+                      </ul>
+                    </div>
                   </div>
                   <div class="agent-side">
                     <div class="tool-card active-glow step-3">
