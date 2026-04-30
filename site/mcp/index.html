@@ -66,20 +66,48 @@
           <div class="feature">
             <div class="feature-copy">
               <span class="label mono">Scenario 01</span>
-              <h3>基础连通与发现</h3>
-              <p>这一组图应该一次覆盖 `ping`、`list_data_sources`、`list_databases`、`list_tables`、`describe_table`。目的是证明：MCP 不是假接口，已经连上真实 datasource，并且能发现 schema。</p>
-              <div class="quote-box">推荐截图组合：左侧 `list_data_sources`，右侧 `describe_table`。一张图就能把“连通 + schema discovery”讲清楚。</div>
+              <h3>先确认：这个环境真的连上了，而且我能看懂表结构</h3>
+              <p>客户看到这组图时，应该立刻明白两件事：OpenTaurus 已经连上真实 datasource，不是在演示假接口；同时它能把数据库、表和 schema 结构准确交给 Agent 继续推理。</p>
+              <div class="quote-box">uses: `ping` / `list_data_sources` / `list_databases` / `list_tables` / `describe_table`。推荐截图组合：左侧 `list_data_sources`，右侧 `describe_table`。</div>
             </div>
-            <div class="terminal shot-placeholder">
-              <div class="terminal-head">
-                <div class="lights"><span class="r"></span><span class="y"></span><span class="g"></span></div>
-                <div class="terminal-title mono">discovery baseline</div>
+            <div class="agent-panel shot-placeholder">
+              <div class="agent-head">
+                <strong>Cursor / Claude Agent</strong>
+                <span class="mono">connected to huaweicloud-taurusdb</span>
               </div>
-              <div class="terminal-body mono">
-                <div><span class="prompt">tool&gt;</span> list_data_sources()</div>
-                <div class="dim">items: prod-ro, staging-ro, local-dev</div>
-                <div><span class="prompt">tool&gt;</span> describe_table(database=shop, table=orders)</div>
-                <div class="dim">columns: id, user_id, amount, created_at</div>
+              <div class="agent-body">
+                <div class="chat-row user">
+                  <div class="chat-bubble">帮我确认这个环境已经接上生产只读库，并看一下 orders 表结构。</div>
+                </div>
+                <div class="chat-row agent">
+                  <div class="chat-bubble">我先检查可用 datasource，然后读取 `shop.orders` 的 schema。</div>
+                </div>
+                <div class="tool-card">
+                  <div class="tool-meta">
+                    <span class="tool-name mono">tool: list_data_sources</span>
+                    <span class="tool-state">ok</span>
+                  </div>
+                  <pre class="mono">default_datasource: prod-ro
+items:
+  - prod-ro
+  - staging-ro
+  - local-dev</pre>
+                </div>
+                <div class="tool-card">
+                  <div class="tool-meta">
+                    <span class="tool-name mono">tool: describe_table</span>
+                    <span class="tool-state">shop.orders</span>
+                  </div>
+                  <pre class="mono">columns:
+  - id bigint primary key
+  - user_id bigint
+  - amount decimal(12,2)
+  - created_at datetime
+indexes:
+  - idx_orders_user_id
+  - idx_orders_created_at</pre>
+                </div>
+                <div class="agent-note">这一块更适合替换成真实 Agent 截图，而不是 shell。因为客户更容易把“智能体通过 MCP 调库”理解成实际使用场景。</div>
               </div>
             </div>
           </div>
@@ -87,8 +115,9 @@
           <div class="feature">
             <div class="feature-copy">
               <span class="label mono">Scenario 02</span>
-              <h3>只读 SQL 与标准 Explain</h3>
-              <p>这一组图覆盖 `execute_readonly_sql` 和 `explain_sql`。客户最关心的是：除了列元数据，是否真能执行查询并返回结构化结果与 plan 分析。</p>
+              <h3>先回答一个真实问题：这条查询会不会拖慢订单服务？</h3>
+              <p>客户关心的不是 tool 名，而是你能不能真的查数据、看结果、再看执行计划。这一组图要传达的是：OpenTaurus 不只会列元数据，它能把查询结果和 plan 分析一起交给 Agent。</p>
+              <div class="quote-box">uses: `execute_readonly_sql` / `explain_sql`。推荐组合：上半展示 count 查询结果，下半展示同一业务查询的 explain。</div>
             </div>
             <div class="terminal shot-placeholder">
               <div class="terminal-head">
@@ -107,8 +136,9 @@
           <div class="feature">
             <div class="feature-copy">
               <span class="label mono">Scenario 03</span>
-              <h3>诊断入口与根因摘要</h3>
-              <p>这一组图优先展示 `diagnose_service_latency`。它最能说明 OpenTaurus 的价值，因为它不是给碎片数据，而是给“症状入口、根因排序、下一步 Tool”。</p>
+              <h3>为什么这个服务在最近 15 分钟突然变慢了？</h3>
+              <p>这一组图最适合作为 OpenTaurus 的主展示，因为它不是把 SQL、锁、连接信息碎片化扔给你，而是先给出根因摘要，再告诉你下一步该往哪里钻。</p>
+              <div class="quote-box">uses: `diagnose_service_latency`。这张图最适合出现在页面最核心的位置。</div>
             </div>
             <div class="terminal shot-placeholder">
               <div class="terminal-head">
@@ -127,8 +157,9 @@
           <div class="feature">
             <div class="feature-copy">
               <span class="label mono">Scenario 04</span>
-              <h3>诊断下钻与 live evidence</h3>
-              <p>这一组图覆盖 `find_top_slow_sql`、`diagnose_slow_query`、`show_processlist`。目的是证明 diagnostics 不是黑盒结论，而是能继续往下钻到 SQL、会话和连接模式。</p>
+              <h3>根因不是一句话，我还能继续往下钻到哪一条 SQL、哪一批会话</h3>
+              <p>客户会天然怀疑：你是不是只是“猜一个结论”。这一组图就是为了解决这个怀疑，证明 diagnostics 可以继续下钻到慢 SQL、具体会话和 live processlist evidence。</p>
+              <div class="quote-box">uses: `find_top_slow_sql` / `diagnose_slow_query` / `show_processlist`。推荐组合：慢 SQL 排名 + app_user 会话快照。</div>
             </div>
             <div class="terminal shot-placeholder">
               <div class="terminal-head">
@@ -147,8 +178,9 @@
           <div class="feature">
             <div class="feature-copy">
               <span class="label mono">Scenario 05</span>
-              <h3>Taurus 专属能力与 feature matrix</h3>
-              <p>这一组图优先展示 `list_taurus_features`。如果实例支持，再补 `explain_sql_enhanced`、`flashback_query`、`list_recycle_bin`。这是“为什么不是普通 MySQL MCP”的核心证明。</p>
+              <h3>这个实例到底支持哪些 TaurusDB 专属能力？</h3>
+              <p>这组图解决的是差异化问题。它不只是告诉客户“能连 MySQL”，而是明确告诉客户：这个实例支持哪些 TaurusDB 专属能力，以及后续还能解锁哪些更深的工具。</p>
+              <div class="quote-box">uses: `list_taurus_features`。如果实例支持，再补 `explain_sql_enhanced` / `flashback_query` / `list_recycle_bin`。</div>
             </div>
             <div class="terminal shot-placeholder">
               <div class="terminal-head">
@@ -167,8 +199,9 @@
           <div class="feature">
             <div class="feature-copy">
               <span class="label mono">Scenario 06</span>
-              <h3>云上下文与安全写入流</h3>
-              <p>最后一组图可以分成上下两半：上半展示 `set_cloud_region`、`list_cloud_taurus_instances`、`select_cloud_taurus_instance` 的云上下文接入；下半展示 `execute_sql` 的 `confirmation_token` 流，证明写操作不是裸奔。</p>
+              <h3>先把云实例接进来，再安全执行高风险操作</h3>
+              <p>最后这一组图用来收口两件事：OpenTaurus 不只是本地查库工具，它能接入华为云实例上下文；同时它也不会把写操作直接裸放给 Agent，而是要求显式确认。</p>
+              <div class="quote-box">uses: `set_cloud_region` / `list_cloud_taurus_instances` / `select_cloud_taurus_instance` / `execute_sql`。推荐组合：上半云实例选择，下半 confirmation token 流。</div>
             </div>
             <div class="terminal shot-placeholder">
               <div class="terminal-head">
