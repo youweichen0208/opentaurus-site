@@ -496,9 +496,9 @@ section.band {
 .agent-note {
   padding: 12px 14px;
   border-radius: 12px;
-  background: rgba(201, 106, 43, 0.12);
-  border: 1px solid rgba(201, 106, 43, 0.18);
-  color: rgba(255, 224, 203, 0.92);
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(237, 236, 236, 0.08);
+  color: rgba(237, 236, 236, 0.72);
   font-size: 0.84rem;
 }
 
