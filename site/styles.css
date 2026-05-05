@@ -335,6 +335,11 @@ section.band {
   margin-bottom: 38px;
 }
 
+.feature-stack {
+  grid-template-columns: 1fr;
+  align-items: start;
+}
+
 .feature:last-child {
   margin-bottom: 0;
 }
@@ -424,10 +429,31 @@ section.band {
   gap: 14px;
 }
 
+.agent-panel-chat .agent-body {
+  padding: 18px 18px 20px;
+}
+
 .agent-layout {
   display: grid;
   grid-template-columns: minmax(0, 1.05fr) minmax(280px, 0.95fr);
   gap: 14px;
+}
+
+.agent-chat-shell {
+  display: grid;
+  gap: 14px;
+}
+
+.chat-scroll {
+  display: grid;
+  gap: 12px;
+  min-height: 320px;
+  padding: 14px;
+  border-radius: 16px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.045), rgba(255, 255, 255, 0.02)),
+    rgba(0, 0, 0, 0.12);
+  border: 1px solid rgba(237, 236, 236, 0.08);
 }
 
 .agent-convo,
@@ -444,10 +470,10 @@ section.band {
 
 .agent-demo .step-1 { animation-delay: 0.2s; }
 .agent-demo .step-2 { animation-delay: 1.2s; }
-.agent-demo .step-3 { animation-delay: 2.7s; }
-.agent-demo .step-4 { animation-delay: 4.6s; }
-.agent-demo .step-5 { animation-delay: 6.3s; }
-.agent-demo .step-6 { animation-delay: 7.8s; }
+.agent-demo .step-3 { animation-delay: 2.3s; }
+.agent-demo .step-4 { animation-delay: 3.2s; }
+.agent-demo .step-5 { animation-delay: 7.2s; }
+.agent-demo .step-6 { animation-delay: 8.5s; }
 
 .agent-composer {
   display: grid;
@@ -500,6 +526,52 @@ section.band {
   color: rgba(237, 236, 236, 0.92);
 }
 
+.agent-panel-chat .assistant-block {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.tool-strip {
+  display: grid;
+  gap: 10px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  border: 1px solid rgba(237, 236, 236, 0.08);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.tool-strip-title {
+  color: rgba(237, 236, 236, 0.56);
+  font-size: 0.74rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.tool-strip-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.tool-pill {
+  display: inline-flex;
+  align-items: center;
+  min-height: 28px;
+  padding: 0 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(121, 192, 255, 0.18);
+  background: rgba(121, 192, 255, 0.1);
+  color: rgba(237, 236, 236, 0.9);
+  font-size: 0.78rem;
+  font-family: "JetBrains Mono", "SFMono-Regular", Consolas, monospace;
+  opacity: 0;
+  transform: translateY(8px);
+  animation: toolLine 10s ease-in-out infinite;
+}
+
+.tool-pill:nth-child(1) { animation-delay: 2.55s; }
+.tool-pill:nth-child(2) { animation-delay: 2.85s; }
+.tool-pill:nth-child(3) { animation-delay: 3.15s; }
+
 .assistant-title {
   margin-bottom: 8px;
   color: rgba(237, 236, 236, 0.62);
@@ -525,6 +597,10 @@ section.band {
   line-height: 1.55;
 }
 
+.agent-panel-chat .chat-bubble {
+  max-width: min(88%, 560px);
+}
+
 .stream-block {
   display: grid;
   gap: 8px;
@@ -536,11 +612,47 @@ section.band {
   white-space: pre-wrap;
 }
 
+.stream-panel .stream-line {
+  opacity: 0;
+  transform: translateY(8px);
+  animation: toolLine 10s ease-in-out infinite;
+}
+
+.stream-panel .stream-line:nth-child(1) { animation-delay: 3.5s; }
+.stream-panel .stream-line:nth-child(2) { animation-delay: 4.15s; }
+.stream-panel .stream-line:nth-child(3) { animation-delay: 4.8s; }
+.stream-panel .stream-line:nth-child(4) { animation-delay: 5.45s; }
+.stream-panel .stream-line:nth-child(5) { animation-delay: 6.1s; }
+
+.thought-line::before {
+  content: "> ";
+  color: rgba(121, 192, 255, 0.88);
+}
+
 .answer-card {
+  margin-top: 14px;
   padding: 14px;
   border-radius: 14px;
   border: 1px solid rgba(126, 231, 135, 0.18);
   background: rgba(126, 231, 135, 0.08);
+}
+
+.stream-panel .answer-card {
+  position: relative;
+  opacity: 0;
+  transform: translateY(8px);
+  animation: toolLine 10s ease-in-out infinite;
+  animation-delay: 7.2s;
+}
+
+.stream-panel .answer-card::before {
+  content: "";
+  position: absolute;
+  top: -10px;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: rgba(237, 236, 236, 0.08);
 }
 
 .answer-title {

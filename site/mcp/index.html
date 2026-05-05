@@ -63,79 +63,54 @@
             <p>不要给每个 Tool 都单独拍图。更有效的方式是按场景收口，让客户先看到“能连、能查、能诊断、能下钻、能接云、能安全执行变更”。</p>
           </div>
 
-          <div class="feature">
+          <div class="feature feature-stack">
             <div class="feature-copy">
               <span class="label mono">Scenario 01</span>
               <h3>先确认：这个环境真的连上了，而且我能看懂表结构</h3>
               <p>客户看到这组图时，应该立刻明白两件事：OpenTaurus 已经连上真实 datasource，不是在演示假接口；同时它能把数据库、表和 schema 结构准确交给 Agent 继续推理。</p>
               <div class="quote-box">uses: `ping` / `list_data_sources` / `list_databases` / `list_tables` / `describe_table`。推荐截图组合：左侧 `list_data_sources`，右侧 `describe_table`。</div>
             </div>
-            <div class="agent-panel shot-placeholder">
+            <div class="agent-panel agent-panel-chat shot-placeholder">
               <div class="agent-head">
                 <strong>Knowledge Agent</strong>
-                <span class="mono">workspace: OpenTaurus / source: huaweicloud-taurusdb</span>
+                <span class="mono">问答模式 / 当前无动作</span>
               </div>
               <div class="agent-body">
-                <div class="agent-layout agent-demo">
-                  <div class="agent-convo">
-                    <div class="agent-composer step-1">
-                      <div class="composer-input">帮我确认这个环境已经接上生产只读库，并看一下 orders 表结构。</div>
-                      <div class="composer-send" aria-label="发送"></div>
+                <div class="agent-chat-shell agent-demo">
+                  <div class="chat-scroll">
+                    <div class="chat-row user step-1">
+                      <div class="chat-bubble">帮我确认这个环境已经接上生产只读库，并看一下 orders 表结构。</div>
                     </div>
-                    <div class="assistant-block step-2">
-                      <div class="assistant-title">智能问答</div>
+                    <div class="chat-row agent step-2">
+                      <div class="chat-bubble">
+                        收到。我先确认当前 datasource，再读取 `shop.orders` 的表结构。
+                      </div>
+                    </div>
+                    <div class="tool-strip step-3">
+                      <div class="tool-strip-title mono">Triggered Tools</div>
+                      <div class="tool-strip-list">
+                        <span class="tool-pill">ping</span>
+                        <span class="tool-pill">list_data_sources</span>
+                        <span class="tool-pill">describe_table</span>
+                      </div>
+                    </div>
+                    <div class="assistant-block stream-panel step-4">
+                      <div class="assistant-title">流式处理</div>
                       <div class="stream-block">
-                        <div class="stream-line line-1">已连接到生产只读 datasource。</div>
-                        <div class="stream-line line-2">正在核对可用数据源，并读取 `shop.orders` 的 schema。</div>
-                        <div class="stream-line line-3">下面是本轮通过 MCP 调用返回的结构化依据。</div>
+                        <div class="stream-line thought-line">正在检查 MCP 连通性，确认当前会话是否已绑定生产只读 datasource...</div>
+                        <div class="stream-line thought-line">已解析默认 datasource 为 `prod-ro`，当前环境可继续做只读元数据查询。</div>
+                        <div class="stream-line thought-line">开始读取 `shop.orders` 表结构，检查列定义、主键和可用索引...</div>
+                        <div class="stream-line thought-line">已拿到 schema，发现业务相关字段主要集中在 `user_id`、`amount`、`created_at`。</div>
+                        <div class="stream-line thought-line">继续比对索引命中可能性，优先关注用户维度查询是否能走 `idx_orders_user_id`。</div>
                       </div>
-                    </div>
-                    <div class="answer-card step-6">
-                      <div class="answer-title">最终回答</div>
-                      <ul class="answer-list">
-                        <li>当前会话已经接入生产只读 datasource，默认数据源为 `prod-ro`。</li>
-                        <li>`shop.orders` 表结构已成功读取，关键字段包括 `id`、`user_id`、`amount`、`created_at`。</li>
-                        <li>已识别 `idx_orders_user_id` 和 `idx_orders_created_at` 两个索引；按当前业务问题，通常会先关注 `user_id` 相关查询是否命中索引。</li>
-                      </ul>
-                    </div>
-                  </div>
-                  <div class="agent-side">
-                    <div class="tool-card active-glow step-3">
-                      <div class="tool-meta">
-                        <span class="tool-name mono">tool: list_data_sources</span>
-                        <span class="tool-state">ok</span>
+                      <div class="answer-card step-5">
+                        <div class="answer-title">最终回复</div>
+                        <ul class="answer-list">
+                          <li>当前会话已经接入生产只读 datasource，默认数据源为 `prod-ro`。</li>
+                          <li>`shop.orders` 表结构已成功读取，关键字段包括 `id`、`user_id`、`amount`、`created_at`。</li>
+                          <li>已识别 `idx_orders_user_id` 和 `idx_orders_created_at` 两个索引；按当前问题，最值得先检查的是 `idx_orders_user_id` 是否覆盖你的用户维度查询。</li>
+                        </ul>
                       </div>
-                      <div class="tool-lines mono">
-                        <div class="tool-line">default_datasource: prod-ro</div>
-                        <div class="tool-line">items:</div>
-                        <div class="tool-line">  - prod-ro</div>
-                        <div class="tool-line">  - staging-ro</div>
-                        <div class="tool-line">  - local-dev</div>
-                      </div>
-                    </div>
-                    <div class="tool-card active-glow step-4">
-                      <div class="tool-meta">
-                        <span class="tool-name mono">tool: describe_table</span>
-                        <span class="tool-state">shop.orders</span>
-                      </div>
-                      <div class="tool-lines mono">
-                        <div class="tool-line">columns:</div>
-                        <div class="tool-line">  - id bigint primary key</div>
-                        <div class="tool-line">  - user_id bigint</div>
-                        <div class="tool-line">  - amount decimal(12,2)</div>
-                        <div class="tool-line">  - created_at datetime</div>
-                        <div class="tool-line">indexes:</div>
-                        <div class="tool-line">  - idx_orders_user_id</div>
-                        <div class="tool-line">  - idx_orders_created_at</div>
-                      </div>
-                    </div>
-                    <div class="source-card step-5">
-                      <h4>本轮引用依据</h4>
-                      <ul class="source-list">
-                        <li>默认 datasource 已解析为 `prod-ro`</li>
-                        <li>`shop.orders` 可读取到列和索引信息</li>
-                        <li>当前业务问题更偏向用户维度检索，因此先关注 `idx_orders_user_id`</li>
-                      </ul>
                     </div>
                   </div>
                 </div>
