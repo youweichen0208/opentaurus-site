@@ -3,6 +3,7 @@
 OpenTaurus 的公开网站仓库。
 
 当前仓库只承载对外站点，不承载 `MCP`、`CLI`、测试或后端实现代码。
+站点前端现已全面切换到 `Vite + Vue 3`。
 
 ## Structure
 
@@ -10,8 +11,18 @@ OpenTaurus 的公开网站仓库。
 .
 ├── .github/workflows/
 │   └── deploy-site.yml
-├── site/
-│   └── index.html
+├── public/
+│   └── assets/
+├── scripts/
+│   └── postbuild.mjs
+├── src/
+│   ├── components/
+│   ├── data/
+│   ├── pages/
+│   └── router/
+├── index.html
+├── package.json
+├── vite.config.js
 └── website-assets/
     ├── cases/
     ├── reports/
@@ -22,9 +33,19 @@ OpenTaurus 的公开网站仓库。
 
 站点通过 GitHub Pages 发布。
 
-发布目录：
+开发命令：
 
-- `site/`
+- `npm install`
+- `npm run dev`
+- `npm run build`
+
+构建产物目录：
+
+- `dist/`
+
+发布说明：
+
+- 生产构建会额外生成 `dist/404.html`，用于 GitHub Pages 下的 SPA 路由回退。
 
 工作流：
 
@@ -35,15 +56,15 @@ OpenTaurus 的公开网站仓库。
 
 ## Content Model
 
-当前首页采用：
+当前 Vue 站点采用：
 
 - Hero
-- 三入口：`MCP Tools` / `Companion CLI` / `Cloud Evidence`
-- Feature bands
-- Cases section
+- 多入口导航：`MCP` / `CLI` / `Agent 配置`
+- MCP 总览页与分类子页
+- 场景数据驱动的动态演示块
 
 后续真实验证素材建议放到：
 
 - `website-assets/cases/<case-slug>/`
 
-并把首页中的占位终端块逐步替换成真实截图和脱敏摘要。
+并把页面中的截图主导内容逐步替换成结构化输出卡片，截图下沉为折叠证据。
