@@ -16,10 +16,21 @@ export const diagnosticsScenarios = [
       "诊断结果显示这条语句同时受模糊匹配和排序影响，属于 scan-heavy 形态。",
       "返回时会同时给出“命中哪条 SQL”和“为什么慢”。",
     ],
-    finalAnswer: [
-      "最可疑 SQL 已被 `find_top_slow_sql` 命中，属于 `LIKE '%999%'` 加排序的组合。",
-      "`diagnose_slow_query` 已指出前导通配符、排序和 offset 共同放大了代价。",
-      "这条链路已经形成“发现 SQL -> 回到根因”的闭环。",
+    agentResponses: [
+      {
+        title: "回复 1",
+        lines: [
+          "我已经命中最可疑 SQL：`SELECT id, user_id, status, amount, created_at FROM t_orders_test WHERE note LIKE '%999%' ORDER BY created_at DESC LIMIT 100 OFFSET 500`。",
+          "`find_top_slow_sql` 里直接显示这条语句平均延迟 `517.85ms`，`rows examined` 约 `250,600`。",
+        ],
+      },
+      {
+        title: "回复 2",
+        lines: [
+          "`diagnose_slow_query` 已确认主要代价来自前导通配符 `LIKE '%999%'`、`ORDER BY created_at DESC` 排序和 `OFFSET 500`。",
+          "这条链路已经形成“发现 SQL -> 回到根因”的闭环。",
+        ],
+      },
     ],
     outputCards: [
       {
@@ -32,14 +43,7 @@ export const diagnosticsScenarios = [
         ],
         lines: [
           "最可疑 SQL：`SELECT id, user_id, status, amount, created_at FROM t_orders_test WHERE note LIKE '%999%' ORDER BY created_at DESC LIMIT 100 OFFSET 500`",
-          "截图中已直接标出问题：前缀模糊匹配导致全表扫描，扫描规模约 25 万行。",
-        ],
-        proofs: [
-          {
-            summary: "查看原始证据截图",
-            src: "/assets/taurusdb-testing-report/image-14.png",
-            alt: "find_top_slow_sql 命中 LIKE 模糊匹配 SQL",
-          },
+          "问题点已经收敛出来：前缀模糊匹配导致全表扫描，扫描规模约 25 万行。",
         ],
       },
       {
@@ -72,10 +76,21 @@ export const diagnosticsScenarios = [
       "结果显示 blocker 持有 `t_hot_counter_test` 行锁，waiter 正在等待同一资源。",
       "这类输出可以直接回答“是谁挡住了你”。",
     ],
-    finalAnswer: [
-      "当前卡顿由单个 blocker 持有热点行锁引起，等待方已经进入锁等待。",
-      "`show_processlist` 和 `diagnose_lock_contention` 都指向同一条阻塞链。",
-      "页面里展示的是“问题 -> blocker/waiter 关系 -> 结论”的完整过程。",
+    agentResponses: [
+      {
+        title: "回复 1",
+        lines: [
+          "实时会话里已经看到会话 `201835` 和 `201838` 并发执行 `UPDATE t_hot_counter_test ...`，目标都是 `counter_key='global'`。",
+          "其中等待方已经进入锁等待，这不是单条 SQL 自己慢，而是资源被占住了。",
+        ],
+      },
+      {
+        title: "回复 2",
+        lines: [
+          "`diagnose_lock_contention` 已把 blocker/waiter 关系收敛到同一条阻塞链：热点表是 `t_hot_counter_test`，Top blocker 是会话 `55860`。",
+          "页面里展示的是“问题 -> blocker/waiter 关系 -> 结论”的完整过程。",
+        ],
+      },
     ],
     outputCards: [
       {
@@ -89,14 +104,7 @@ export const diagnosticsScenarios = [
         lines: [
           "会话 `201835` 正在执行 `UPDATE t_hot_counter_test ...`，已运行 `26s`。",
           "会话 `201838` 正在执行同一条更新，已运行 `23s`。",
-          "截图摘要已明确提示两会话并发更新同一行，可能产生锁竞争。",
-        ],
-        proofs: [
-          {
-            summary: "查看原始证据截图",
-            src: "/assets/taurusdb-testing-report/image-19.png",
-            alt: "show_processlist 捕获锁等待现场",
-          },
+          "两会话并发更新同一行，已经具备典型锁竞争特征。",
         ],
       },
       {
@@ -112,13 +120,6 @@ export const diagnosticsScenarios = [
             ["Top blocker", "会话 `55860`，用户 `youweichen`"],
           ],
         },
-        proofs: [
-          {
-            summary: "查看原始证据截图",
-            src: "/assets/taurusdb-testing-report/image-13.png",
-            alt: "diagnose_lock_contention 识别 blocker 和 waiter",
-          },
-        ],
       },
     ],
   },
@@ -141,10 +142,21 @@ export const queryScenarios = [
       "结果里已经出现 `taurusHints`，可以直接转成对人可读的执行解释。",
       "这种查询页的重点不是“有没有工具”，而是“结果解释是否能直接被用户理解”。",
     ],
-    finalAnswer: [
-      "这条查询已经命中 TaurusDB 增强 explain，返回中包含可读的优化提示。",
-      "当前可以明确展示 offset pushdown、parallel query、NDP pushdown 等解释信息。",
-      "页面应该把“查询结果”和“执行解释”作为一个完整问答来呈现。",
+    agentResponses: [
+      {
+        title: "回复 1",
+        lines: [
+          "实例已经识别为 TaurusDB，能力探测里显示 `offset_pushdown`、`parallel_query`、`ndp_pushdown` 都已开启。",
+          "所以这次不是只给标准 EXPLAIN，而是走增强 explain 路径。",
+        ],
+      },
+      {
+        title: "回复 2",
+        lines: [
+          "增强 explain 结果里已经出现 `Using offset pushdown`，并且直接标出了 `offset_pushdown` ✅ / `parallel_query` ✅ / `ndp_pushdown` ❌。",
+          "页面应该把“查询结果”和“执行解释”作为一个完整问答来呈现。",
+        ],
+      },
     ],
     outputCards: [
       {
@@ -154,13 +166,6 @@ export const queryScenarios = [
           { label: "mysql compatibility", value: "`8.0`" },
           { label: "enabled", value: "`offset_pushdown` / `parallel_query` / `ndp_pushdown`" },
           { label: "page role", value: "先给查询解释一个 TaurusDB 上下文" },
-        ],
-        proofs: [
-          {
-            summary: "查看原始证据截图",
-            src: "/assets/taurusdb-testing-report/image-30.png",
-            alt: "TaurusDB 实例能力探测结果",
-          },
         ],
       },
       {
@@ -175,13 +180,6 @@ export const queryScenarios = [
             ["优化命中", "`offset_pushdown` ✅ / `parallel_query` ✅ / `ndp_pushdown` ❌"],
           ],
         },
-        proofs: [
-          {
-            summary: "查看原始证据截图",
-            src: "/assets/taurusdb-testing-report/image-44.png",
-            alt: "offset_pushdown 场景",
-          },
-        ],
       },
     ],
   },
@@ -201,10 +199,21 @@ export const queryScenarios = [
       "两次查询对照显示，历史态和当前态确实不同，说明更新已经发生。",
       "这类页面应该重点突出“同一条记录在两个时间切片里的结果差异”。",
     ],
-    finalAnswer: [
-      "`flashback_query` 已经返回历史时刻的旧值。",
-      "普通只读查询返回的是更新后的当前值，两者形成直接对照。",
-      "这类能力更适合收在“数据查询”页，而不是和恢复、脱敏混在一起。",
+    agentResponses: [
+      {
+        title: "回复 1",
+        lines: [
+          "flashback 前置条件已经满足：`innodb_rds_backquery_enable` 已开启，目标表也以 `BACKQUERY=1` 创建。",
+          "本次历史时点使用 `2026-05-13 11:04:39`。",
+        ],
+      },
+      {
+        title: "回复 2",
+        lines: [
+          "`flashback_query` 返回的历史态里，`status` 还是 `draft`；当前普通查询返回的是 `published`。",
+          "这类能力更适合收在“数据查询”页，而不是和恢复、脱敏混在一起。",
+        ],
+      },
     ],
     outputCards: [
       {
@@ -213,13 +222,6 @@ export const queryScenarios = [
           "实例参数 `innodb_rds_backquery_enable` 已开启。",
           "测试表以 `BACKQUERY=1` 创建，可进行历史视图回查。",
           "本次对比使用历史时点 `2026-05-13 11:04:39`。",
-        ],
-        proofs: [
-          {
-            summary: "查看原始证据截图",
-            src: "/assets/taurusdb-testing-report/image-35.png",
-            alt: "flashback 参数已开启",
-          },
         ],
       },
       {
@@ -233,13 +235,6 @@ export const queryScenarios = [
             ["updated_at", "`11:03:39`", "`11:04:39`"],
           ],
         },
-        proofs: [
-          {
-            summary: "查看原始证据截图",
-            src: "/assets/taurusdb-testing-report/image-42.png",
-            alt: "flashback_query 返回历史态，对比当前态",
-          },
-        ],
       },
     ],
   },
@@ -258,35 +253,38 @@ export const taurusScenarios = [
     tools: ["list_taurus_features", "list_recycle_bin", "restore_recycle_bin_table"],
     streamLines: [
       "已确认实例开启 recycle bin，开始查询回收站对象列表...",
-      "目标表删除后仍在 recycle bin 中，可继续恢复。",
-      "第一次恢复请求按预期返回 `confirmation_token`，没有直接执行。",
-      "带 token 二次调用后，恢复成功，继续校验表和记录数是否恢复。",
+      "目标表删除后仍在 recycle bin 中，回收对象指向 `taurusdb_test@t_recycle_bin_test@6a0532d4`，目标恢复位置是 `taurusdb_test.t_recycle_bin_test`。",
+      "第一次恢复请求按预期返回 `CONFIRMATION_REQUIRED`，并明确给出 `confirmation_token` 与 `native_restore` 方法，没有直接执行。",
+      "带 token 二次调用后，恢复成功，返回 `ok=true`、`destination_table=t_recycle_bin_test`、`duration_ms=206`，随后继续校验表和记录数。",
       "这一步最能体现 MCP 对高风险动作的 guardrail 模型。",
     ],
-    finalAnswer: [
-      "目标对象仍在 recycle bin 中，可恢复。",
-      "恢复流程遵循两阶段确认，先拿 token，再执行恢复。",
-      "恢复后表和样本数据都已回到删除前状态。",
+    agentResponses: [
+      {
+        title: "回复 1",
+        lines: [
+          "我已经确认目标对象还在 recycle bin，可以恢复。",
+          "第一次 `restore_recycle_bin_table` 没有直接执行，而是返回 `CONFIRMATION_REQUIRED` 和 `confirmation_token`，这一步必须显式展示出来。",
+        ],
+      },
+      {
+        title: "回复 2",
+        lines: [
+          "二次调用带上 token 后恢复成功，目标表 `t_recycle_bin_test` 已回到原库。",
+          "恢复后表和样本数据都已回到删除前状态。",
+        ],
+      },
     ],
     outputCards: [
       {
-        title: "`restore_recycle_bin_table` 第一次返回",
+        title: "`list_recycle_bin` 与恢复上下文",
         meta: [
-          { label: "ok", value: "`false`" },
-          { label: "error code", value: "`CONFIRMATION_REQUIRED`" },
-          { label: "method", value: "`native_restore`" },
+          { label: "recycle bin", value: "`enabled`" },
+          { label: "recycle table", value: "`taurusdb_test@t_recycle_bin_test@6a0532d4`" },
           { label: "destination", value: "`taurusdb_test.t_recycle_bin_test`" },
         ],
         lines: [
-          "返回了明确的 `confirmation_token`，而不是直接执行恢复。",
-          "这说明恢复类操作受 guardrail 保护，必须二次确认。",
-        ],
-        proofs: [
-          {
-            summary: "查看原始证据截图",
-            src: "/assets/taurusdb-testing-report/image-53.png",
-            alt: "第一次调用返回 confirmation token",
-          },
+          "目标表删除后没有丢失，而是进入 recycle bin，恢复动作有明确的源对象和目标位置。",
+          "第一次恢复返回中的 `confirmation_token` 已放进上面的流式处理中，不再单独做一张卡片。",
         ],
       },
       {
@@ -301,12 +299,13 @@ export const taurusScenarios = [
             ["duration_ms", "`206`"],
           ],
         },
-        proofs: [
-          {
-            summary: "查看原始证据截图",
-            src: "/assets/taurusdb-testing-report/image-54.png",
-            alt: "第二次调用恢复成功",
-          },
+      },
+      {
+        title: "为什么这段演示重要",
+        lines: [
+          "恢复类操作没有被一句话直接执行，而是被 MCP 强制拆成“定位对象 -> 返回 confirmation_token -> 确认后恢复”三步。",
+          "这说明 OpenTaurus MCP 展示的不只是数据库能力本身，还把高风险动作放进了可确认、可审计的 guardrail 流程。",
+          "对客户来说，重点不是“能恢复一张表”，而是“恢复这类危险操作不会被误触发”。",
         ],
       },
     ],
@@ -328,10 +327,21 @@ export const taurusScenarios = [
       "主键和非敏感字段一致，说明两次查询命中的是同一条底表记录。",
       "结论是动态脱敏只影响查询展示，不改写底表数据。",
     ],
-    finalAnswer: [
-      "动态脱敏功能已开启并存在有效规则。",
-      "`root` 视角返回原始值，受控用户视角返回脱敏值，且命中同一条记录。",
-      "这类能力应该独立收在 TaurusDB 专属能力页。",
+    agentResponses: [
+      {
+        title: "回复 1",
+        lines: [
+          "动态脱敏参数 `rds_dynamic_masking_enabled=ON`，目标是 `t_dynamic_masking_test` 表中 `id = 1` 的同一条记录。",
+          "我先用 `root` 视角读取原始值，再用受控用户视角读取脱敏值。",
+        ],
+      },
+      {
+        title: "回复 2",
+        lines: [
+          "`root` 看到的是 `13812345678`、`masking-a@example.com`、`330101199001011234`；受控用户看到的都是 `******`。",
+          "这类能力应该独立收在 TaurusDB 专属能力页。",
+        ],
+      },
     ],
     outputCards: [
       {
@@ -340,13 +350,6 @@ export const taurusScenarios = [
           "动态脱敏参数 `rds_dynamic_masking_enabled=ON`。",
           "查询目标为 `t_dynamic_masking_test` 表中 `id = 1` 的记录。",
           "比对维度为 `phone`、`email`、`id_no` 三个敏感字段。",
-        ],
-        proofs: [
-          {
-            summary: "查看原始证据截图",
-            src: "/assets/taurusdb-testing-report/image-48.png",
-            alt: "动态脱敏参数已开启",
-          },
         ],
       },
       {
@@ -359,17 +362,13 @@ export const taurusScenarios = [
             ["id_no", "`330101199001011234`", "`******`"],
           ],
         },
-        proofs: [
-          {
-            summary: "查看高权限原始截图",
-            src: "/assets/taurusdb-testing-report/image-58.png",
-            alt: "高权限用户查询原始值",
-          },
-          {
-            summary: "查看受控用户原始截图",
-            src: "/assets/taurusdb-testing-report/image-60.png",
-            alt: "受控用户查询脱敏值",
-          },
+      },
+      {
+        title: "为什么这段演示重要",
+        lines: [
+          "动态脱敏演示的重点不是“参数开了”，而是同一条记录在不同身份下返回了不同结果。",
+          "这说明 OpenTaurus MCP 展示的不只是规则存在，而是能把“谁看到原文、谁看到脱敏值”直接讲清楚。",
+          "对客户来说，重点不是复制一份脱敏数据，而是在不改写底表的前提下把查询权限边界落到结果层。",
         ],
       },
     ],

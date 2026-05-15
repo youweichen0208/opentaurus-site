@@ -1,0 +1,34 @@
+[      72ms] [WARNING] [Vue warn]: Unhandled error during execution of render function 
+  at <RouterLink key="recycle-bin-recovery" class="shot-card" to="/mcp/taurusdb/recycle-bin-recovery" > 
+  at <TaurusNativePage onVnodeUnmounted=fn<onVnodeUnmounted> ref=Ref< undefined > > 
+  at <RouterView> 
+  at <SiteShell> 
+  at <App> @ http://127.0.0.1:4173/opentaurus-site/node_modules/.vite/deps/chunk-PRB2KXUH.js?v=2d639321:2224
+[      72ms] [WARNING] [Vue warn]: Unhandled error during execution of component update 
+  at <RouterView> 
+  at <SiteShell> 
+  at <App> @ http://127.0.0.1:4173/opentaurus-site/node_modules/.vite/deps/chunk-PRB2KXUH.js?v=2d639321:2224
+[      72ms] [WARNING] [Vue Router warn]: uncaught error during route navigation: @ http://127.0.0.1:4173/opentaurus-site/node_modules/.vite/deps/vue-router.js?v=2d639321:205
+[      72ms] [ERROR] TypeError: Cannot read properties of undefined (reading 'src')
+    at http://127.0.0.1:4173/opentaurus-site/src/pages/TaurusNativePage.vue?t=1778745207471:60:41
+    at Proxy.renderFnWithContext (http://127.0.0.1:4173/opentaurus-site/node_modules/.vite/deps/chunk-PRB2KXUH.js?v=2d639321:2883:13)
+    at Proxy.<anonymous> (http://127.0.0.1:4173/opentaurus-site/node_modules/.vite/deps/vue-router.js?v=2d639321:1852:72)
+    at renderComponentRoot (http://127.0.0.1:4173/opentaurus-site/node_modules/.vite/deps/chunk-PRB2KXUH.js?v=2d639321:6748:17)
+    at ReactiveEffect.componentUpdateFn [as fn] (http://127.0.0.1:4173/opentaurus-site/node_modules/.vite/deps/chunk-PRB2KXUH.js?v=2d639321:8321:46)
+    at ReactiveEffect.run (http://127.0.0.1:4173/opentaurus-site/node_modules/.vite/deps/chunk-PRB2KXUH.js?v=2d639321:528:19)
+    at setupRenderEffect (http://127.0.0.1:4173/opentaurus-site/node_modules/.vite/deps/chunk-PRB2KXUH.js?v=2d639321:8456:5)
+    at mountComponent (http://127.0.0.1:4173/opentaurus-site/node_modules/.vite/deps/chunk-PRB2KXUH.js?v=2d639321:8228:7)
+    at processComponent (http://127.0.0.1:4173/opentaurus-site/node_modules/.vite/deps/chunk-PRB2KXUH.js?v=2d639321:8180:9)
+    at patch (http://127.0.0.1:4173/opentaurus-site/node_modules/.vite/deps/chunk-PRB2KXUH.js?v=2d639321:7677:11) @ http://127.0.0.1:4173/opentaurus-site/node_modules/.vite/deps/vue-router.js?v=2d639321:2261
+[     160ms] TypeError: Cannot read properties of undefined (reading 'src')
+    at http://127.0.0.1:4173/opentaurus-site/src/pages/TaurusNativePage.vue?t=1778745207471:60:41
+    at Proxy.renderFnWithContext (http://127.0.0.1:4173/opentaurus-site/node_modules/.vite/deps/chunk-PRB2KXUH.js?v=2d639321:2883:13)
+    at Proxy.<anonymous> (http://127.0.0.1:4173/opentaurus-site/node_modules/.vite/deps/vue-router.js?v=2d639321:1852:72)
+    at renderComponentRoot (http://127.0.0.1:4173/opentaurus-site/node_modules/.vite/deps/chunk-PRB2KXUH.js?v=2d639321:6748:17)
+    at ReactiveEffect.componentUpdateFn [as fn] (http://127.0.0.1:4173/opentaurus-site/node_modules/.vite/deps/chunk-PRB2KXUH.js?v=2d639321:8321:46)
+    at ReactiveEffect.run (http://127.0.0.1:4173/opentaurus-site/node_modules/.vite/deps/chunk-PRB2KXUH.js?v=2d639321:528:19)
+    at setupRenderEffect (http://127.0.0.1:4173/opentaurus-site/node_modules/.vite/deps/chunk-PRB2KXUH.js?v=2d639321:8456:5)
+    at mountComponent (http://127.0.0.1:4173/opentaurus-site/node_modules/.vite/deps/chunk-PRB2KXUH.js?v=2d639321:8228:7)
+    at processComponent (http://127.0.0.1:4173/opentaurus-site/node_modules/.vite/deps/chunk-PRB2KXUH.js?v=2d639321:8180:9)
+    at patch (http://127.0.0.1:4173/opentaurus-site/node_modules/.vite/deps/chunk-PRB2KXUH.js?v=2d639321:7677:11)
+[ 3862863ms] [LOG] [vite] server connection lost. Polling for restart... @ http://127.0.0.1:4173/opentaurus-site/@vite/client:963

@@ -1,0 +1,31 @@
+<svg width="1600" height="900" viewBox="0 0 1600 900" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1600" height="900" fill="#F2EEE7"/>
+  <rect x="70" y="70" width="1460" height="760" rx="28" fill="#FFF9F1" stroke="#D7C7AF" stroke-width="4"/>
+  <text x="120" y="145" fill="#42372A" font-size="44" font-family="Georgia, serif">Dynamic Masking Setup</text>
+  <text x="120" y="190" fill="#7A6A55" font-size="24" font-family="Arial, sans-serif">One row is stored once. Different users query the same row and see different values.</text>
+
+  <rect x="560" y="250" width="480" height="380" rx="24" fill="#FCE8C6" stroke="#DAAD5B" stroke-width="3"/>
+  <text x="610" y="315" fill="#4B3820" font-size="30" font-family="Arial, sans-serif">Base Table: t_dynamic_masking_test</text>
+  <rect x="610" y="350" width="380" height="210" rx="16" fill="#FFF7E8" stroke="#E7C88E"/>
+  <text x="634" y="390" fill="#5C4831" font-size="22" font-family="Courier New, monospace">id: 1</text>
+  <text x="634" y="430" fill="#5C4831" font-size="22" font-family="Courier New, monospace">phone: 13812345678</text>
+  <text x="634" y="470" fill="#5C4831" font-size="22" font-family="Courier New, monospace">email: masking-a@example.com</text>
+  <text x="634" y="510" fill="#5C4831" font-size="22" font-family="Courier New, monospace">id_no: 330101199001011234</text>
+
+  <rect x="140" y="300" width="280" height="280" rx="22" fill="#DDEDDC" stroke="#7EA57B" stroke-width="3"/>
+  <text x="188" y="360" fill="#314730" font-size="28" font-family="Arial, sans-serif">Root View</text>
+  <text x="176" y="420" fill="#365235" font-size="22" font-family="Courier New, monospace">phone: 13812345678</text>
+  <text x="176" y="462" fill="#365235" font-size="22" font-family="Courier New, monospace">email: masking-a@...</text>
+  <text x="176" y="504" fill="#365235" font-size="22" font-family="Courier New, monospace">id_no: 330101199...</text>
+
+  <rect x="1180" y="300" width="280" height="280" rx="22" fill="#F8DDD6" stroke="#CF7D66" stroke-width="3"/>
+  <text x="1206" y="360" fill="#60382E" font-size="28" font-family="Arial, sans-serif">Controlled User</text>
+  <text x="1226" y="420" fill="#8C4C3A" font-size="22" font-family="Courier New, monospace">phone: ******</text>
+  <text x="1226" y="462" fill="#8C4C3A" font-size="22" font-family="Courier New, monospace">email: ******</text>
+  <text x="1226" y="504" fill="#8C4C3A" font-size="22" font-family="Courier New, monospace">id_no: ******</text>
+
+  <path d="M420 438H540" stroke="#7EA57B" stroke-width="8" stroke-linecap="round"/>
+  <path d="M520 418L560 438L520 458" stroke="#7EA57B" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M1040 438H1160" stroke="#CF7D66" stroke-width="8" stroke-linecap="round"/>
+  <path d="M1140 418L1180 438L1140 458" stroke="#CF7D66" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

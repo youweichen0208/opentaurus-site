@@ -1,0 +1,461 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <title>OpenTaurus MCP | 运维诊断</title>
+    <meta
+      name="description"
+      content="OpenTaurus 运维诊断页面：展示慢 SQL、锁竞争、连接堆积与存储压力的流式诊断过程。"
+    />
+    <link rel="stylesheet" href="../../styles.css" />
+  </head>
+  <body>
+    <nav class="shell">
+      <div class="shell-inner">
+        <div class="brand">
+          <span class="brand-mark" aria-hidden="true"></span>
+          <a class="brand-name" href="../../">OpenTaurus</a>
+        </div>
+        <div class="nav-links">
+          <a href="../../mcp/">MCP</a>
+          <a href="../../cli/">CLI</a>
+          <a href="../../agents/">Agent 配置</a>
+          <a
+            href="https://github.com/youweichen0208/taurus-mcp-server"
+            target="_blank"
+            rel="noopener noreferrer"
+            >GitHub</a
+          >
+        </div>
+      </div>
+    </nav>
+
+    <main>
+      <section class="hero">
+        <div class="section-inner hero-wrap">
+          <div class="hero-copy hero-copy-left">
+            <div class="eyebrow">
+              <span class="brand-mark" aria-hidden="true"></span>
+              <span>Ops Diagnostics</span>
+            </div>
+            <h1>把慢、卡、堵拆成可追踪的诊断链路</h1>
+            <p>
+              这一页只讲运维诊断问题：慢
+              SQL、锁竞争、连接堆积和存储压力。每个演示都保留用户输入、MCP
+              工具调用、流式分析和最终结论，再用报告截图承接证据。
+            </p>
+            <div class="local-nav">
+              <a href="../">返回总览</a>
+              <a href="../query/">数据查询</a>
+              <a href="../taurusdb/">TaurusDB 专属能力</a>
+            </div>
+          </div>
+
+          <div class="terminal">
+            <div class="terminal-head">
+              <div class="lights">
+                <span class="r"></span><span class="y"></span
+                ><span class="g"></span>
+              </div>
+              <div class="terminal-title mono">diagnostics toolchain</div>
+            </div>
+            <div class="terminal-body mono">
+              <div><span class="prompt">tool&gt;</span> find_top_slow_sql</div>
+              <div>
+                <span class="prompt">tool&gt;</span> diagnose_slow_query
+              </div>
+              <div><span class="prompt">tool&gt;</span> show_processlist</div>
+              <div>
+                <span class="prompt">tool&gt;</span> diagnose_lock_contention
+              </div>
+              <div>
+                <span class="prompt">tool&gt;</span> diagnose_connection_spike
+              </div>
+              <div>
+                <span class="prompt">tool&gt;</span> diagnose_storage_pressure
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div class="divider"></div>
+
+      <section class="band">
+        <div class="section-inner">
+          <div class="demo-grid">
+            <section class="feature feature-stack section-anchor" id="slow-sql">
+              <div class="demo-panel-intro">
+                <span class="label mono">Scenario 01</span>
+                <h3>慢 SQL 为什么拖慢接口</h3>
+                <p>
+                  从自然语言问题出发，先找最近窗口里的慢
+                  SQL，再对命中的语句做根因分析。这是最适合做成动态输入输出流的一类场景。
+                </p>
+              </div>
+              <div class="agent-panel agent-panel-chat">
+                <div class="agent-head">
+                  <strong>Cursor + OpenTaurus MCP</strong>
+                  <span class="mono">slow sql diagnosis</span>
+                </div>
+                <div class="agent-body">
+                  <div class="agent-layout">
+                    <div class="agent-chat-shell">
+                      <div class="chat-scroll">
+                        <div class="chat-row user demo-step step-1">
+                          <div class="chat-bubble">
+                            这个订单查询最近很慢，帮我找出最可疑的 SQL
+                            并说明原因。
+                          </div>
+                        </div>
+                        <div class="chat-row agent demo-step step-2">
+                          <div class="chat-bubble">
+                            我先找最近窗口里的慢 SQL，再对命中的查询做根因分析。
+                          </div>
+                        </div>
+                        <div class="tool-strip demo-step step-3">
+                          <div class="tool-strip-title mono">
+                            Triggered Tools
+                          </div>
+                          <div class="tool-strip-list">
+                            <span class="tool-pill">find_top_slow_sql</span>
+                            <span class="tool-pill">diagnose_slow_query</span>
+                            <span class="tool-pill">list_taurus_features</span>
+                          </div>
+                        </div>
+                        <div
+                          class="assistant-block stream-panel demo-step step-4"
+                        >
+                          <div class="assistant-title">流式处理</div>
+                          <div class="stream-block">
+                            <div class="stream-line thought-line">
+                              开始扫描慢 SQL 排名，优先看 rows examined
+                              和排序代价异常高的语句...
+                            </div>
+                            <div class="stream-line thought-line">
+                              已命中 `WHERE note LIKE '%999%' ORDER BY
+                              created_at DESC LIMIT 100 OFFSET 500`。
+                            </div>
+                            <div class="stream-line thought-line">
+                              继续下钻单条
+                              SQL，检查前导通配符、全表扫描和排序代价是否叠加。
+                            </div>
+                            <div class="stream-line thought-line">
+                              诊断结果显示这条语句同时受模糊匹配和排序影响，属于
+                              scan-heavy 形态。
+                            </div>
+                            <div class="stream-line thought-line">
+                              返回时会同时给出“命中哪条 SQL”和“为什么慢”。
+                            </div>
+                          </div>
+                          <div class="answer-card demo-step step-5">
+                            <div class="answer-title">最终回复</div>
+                            <ul class="answer-list">
+                              <li>
+                                最可疑 SQL 已被 `find_top_slow_sql` 命中，属于
+                                `LIKE '%999%'` 加排序的组合。
+                              </li>
+                              <li>
+                                `diagnose_slow_query` 已指出前导通配符、排序和
+                                offset 共同放大了代价。
+                              </li>
+                              <li>
+                                这条链路已经形成“发现 SQL -> 回到根因”的闭环。
+                              </li>
+                            </ul>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="agent-side">
+                      <article class="output-card demo-step step-3">
+                        <h4>`find_top_slow_sql` 提取结果</h4>
+                        <div class="output-meta">
+                          <span
+                            ><strong>summary</strong><br />Top slow SQL
+                            discovery returned ok.</span
+                          >
+                          <span
+                            ><strong>top digest</strong><br />`SELECT ... FROM
+                            t_orders_test ...`</span
+                          >
+                          <span
+                            ><strong>avg latency</strong><br />`517.85ms`</span
+                          >
+                          <span
+                            ><strong>rows examined</strong><br />`250,600`</span
+                          >
+                        </div>
+                        <ul class="output-lines">
+                          <li>
+                            最可疑 SQL：`SELECT id, user_id, status, amount,
+                            created_at FROM t_orders_test WHERE note LIKE
+                            '%999%' ORDER BY created_at DESC LIMIT 100 OFFSET
+                            500`
+                          </li>
+                          <li>
+                            截图中已直接标出问题：前缀模糊匹配导致全表扫描，扫描规模约
+                            25 万行。
+                          </li>
+                        </ul>
+                        <details class="proof-box">
+                          <summary>查看原始证据截图</summary>
+                          <img
+                            src="../../assets/taurusdb-testing-report/image-14.png"
+                            alt="find_top_slow_sql 命中 LIKE 模糊匹配 SQL"
+                            loading="lazy"
+                          />
+                        </details>
+                      </article>
+                      <article class="output-card demo-step step-4">
+                        <h4>`diagnose_slow_query` 输出摘要</h4>
+                        <table class="output-table">
+                          <thead>
+                            <tr>
+                              <th>维度</th>
+                              <th>结论</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr>
+                              <td>匹配模式</td>
+                              <td>前导通配符 `LIKE '%999%'`，难以利用索引</td>
+                            </tr>
+                            <tr>
+                              <td>执行代价</td>
+                              <td>
+                                全表扫描叠加 `ORDER BY created_at DESC` 排序
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>分页模式</td>
+                              <td>`OFFSET 500` 继续放大扫描与排序成本</td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </article>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <section class="feature feature-stack section-anchor" id="locks">
+              <div class="demo-panel-intro">
+                <span class="label mono">Scenario 02</span>
+                <h3>锁竞争要能指出 blocker 和 waiter</h3>
+                <p>
+                  不是只回一张
+                  processlist，而是把“谁在挡谁”讲清楚。这类场景特别适合用流式分析展示中间推理步骤。
+                </p>
+              </div>
+              <div class="agent-panel agent-panel-chat">
+                <div class="agent-head">
+                  <strong>Cursor + OpenTaurus MCP</strong>
+                  <span class="mono">lock contention diagnosis</span>
+                </div>
+                <div class="agent-body">
+                  <div class="agent-layout">
+                    <div class="agent-chat-shell">
+                      <div class="chat-scroll">
+                        <div class="chat-row user demo-step step-1">
+                          <div class="chat-bubble">
+                            这个更新语句卡住了，帮我看是谁在挡它。
+                          </div>
+                        </div>
+                        <div class="chat-row agent demo-step step-2">
+                          <div class="chat-bubble">
+                            我先抓实时会话，再定位 blocker 和 waiter
+                            的关系，确认是不是热点行锁。
+                          </div>
+                        </div>
+                        <div class="tool-strip demo-step step-3">
+                          <div class="tool-strip-title mono">
+                            Triggered Tools
+                          </div>
+                          <div class="tool-strip-list">
+                            <span class="tool-pill">show_processlist</span>
+                            <span class="tool-pill"
+                              >diagnose_lock_contention</span
+                            >
+                            <span class="tool-pill">describe_table</span>
+                          </div>
+                        </div>
+                        <div
+                          class="assistant-block stream-panel demo-step step-4"
+                        >
+                          <div class="assistant-title">流式处理</div>
+                          <div class="stream-block">
+                            <div class="stream-line thought-line">
+                              先抓 processlist，确认是否已经出现等待中的 update
+                              会话...
+                            </div>
+                            <div class="stream-line thought-line">
+                              已看到 waiter 卡在同一热点行，阻塞链路存在。
+                            </div>
+                            <div class="stream-line thought-line">
+                              继续运行 `diagnose_lock_contention`，识别 blocker
+                              session 与热点表。
+                            </div>
+                            <div class="stream-line thought-line">
+                              结果显示 blocker 持有 `t_hot_counter_test`
+                              行锁，waiter 正在等待同一资源。
+                            </div>
+                            <div class="stream-line thought-line">
+                              这类输出可以直接回答“是谁挡住了你”。
+                            </div>
+                          </div>
+                          <div class="answer-card demo-step step-5">
+                            <div class="answer-title">最终回复</div>
+                            <ul class="answer-list">
+                              <li>
+                                当前卡顿由单个 blocker
+                                持有热点行锁引起，等待方已经进入锁等待。
+                              </li>
+                              <li>
+                                `show_processlist` 和 `diagnose_lock_contention`
+                                都指向同一条阻塞链。
+                              </li>
+                              <li>
+                                页面里展示的是“问题 -> blocker/waiter 关系 ->
+                                结论”的完整过程。
+                              </li>
+                            </ul>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="agent-side">
+                      <article class="output-card demo-step step-3">
+                        <h4>`show_processlist` 提取结果</h4>
+                        <div class="output-meta">
+                          <span
+                            ><strong>summary</strong><br />Returned `9`
+                            processlist rows.</span
+                          >
+                          <span><strong>sleep sessions</strong><br />`6`</span>
+                          <span
+                            ><strong>running updates</strong><br />会话
+                            `201835`、`201838`</span
+                          >
+                          <span
+                            ><strong>risk note</strong><br />并发更新同一行
+                            `counter_key='global'`</span
+                          >
+                        </div>
+                        <ul class="output-lines">
+                          <li>
+                            会话 `201835` 正在执行 `UPDATE t_hot_counter_test
+                            ...`，已运行 `26s`。
+                          </li>
+                          <li>
+                            会话 `201838` 正在执行同一条更新，已运行 `23s`。
+                          </li>
+                          <li>
+                            截图摘要已明确提示两会话并发更新同一行，可能产生锁竞争。
+                          </li>
+                        </ul>
+                        <details class="proof-box">
+                          <summary>查看原始证据截图</summary>
+                          <img
+                            src="../../assets/taurusdb-testing-report/image-19.png"
+                            alt="show_processlist 捕获锁等待现场"
+                            loading="lazy"
+                          />
+                        </details>
+                      </article>
+                      <article class="output-card demo-step step-4">
+                        <h4>`diagnose_lock_contention` 提取结果</h4>
+                        <table class="output-table">
+                          <thead>
+                            <tr>
+                              <th>字段</th>
+                              <th>值</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr>
+                              <td>严重程度</td>
+                              <td>Warning</td>
+                            </tr>
+                            <tr>
+                              <td>当前锁等待数</td>
+                              <td>1</td>
+                            </tr>
+                            <tr>
+                              <td>阻塞会话数</td>
+                              <td>1</td>
+                            </tr>
+                            <tr>
+                              <td>被锁表</td>
+                              <td>`t_hot_counter_test`</td>
+                            </tr>
+                            <tr>
+                              <td>最长等待时间</td>
+                              <td>`>= 60s`</td>
+                            </tr>
+                            <tr>
+                              <td>Top blocker</td>
+                              <td>会话 `55860`，用户 `youweichen`</td>
+                            </tr>
+                          </tbody>
+                        </table>
+                        <details class="proof-box">
+                          <summary>查看原始证据截图</summary>
+                          <img
+                            src="../../assets/taurusdb-testing-report/image-13.png"
+                            alt="diagnose_lock_contention 识别 blocker 和 waiter"
+                            loading="lazy"
+                          />
+                        </details>
+                      </article>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <section class="summary-band">
+              <article class="card">
+                <span class="mode-tag mono">Connection Spike</span>
+                <h3>连接堆积</h3>
+                <ul class="compact-list">
+                  <li>`show_processlist` 已抓到大量 `Sleep` 会话。</li>
+                  <li>
+                    `diagnose_connection_spike` 能基于实时快照给出连接堆积结论。
+                  </li>
+                  <li>当前表述限定为“基于 processlist 的实时诊断可用”。</li>
+                </ul>
+              </article>
+              <article class="card">
+                <span class="mode-tag mono">Storage Pressure</span>
+                <h3>存储压力</h3>
+                <ul class="compact-list">
+                  <li>
+                    `diagnose_storage_pressure` 已返回表占用、临时表和疑似 SQL
+                    证据。
+                  </li>
+                  <li>同一结果里同时出现了扫描密集 SQL 与排序/临时表负载。</li>
+                  <li>这部分更适合作为运维诊断结论卡，而不是长篇截图墙。</li>
+                </ul>
+              </article>
+            </section>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <div class="footer-inner">
+        <div class="footer-copy">
+          <strong>OpenTaurus Diagnostics</strong>
+          <span>Slow SQL, locks, connection spikes, and storage pressure.</span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

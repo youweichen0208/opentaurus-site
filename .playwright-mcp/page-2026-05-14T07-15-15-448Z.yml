@@ -1,0 +1,219 @@
+- generic [ref=e3]:
+  - navigation [ref=e4]:
+    - generic [ref=e5]:
+      - link "OpenTaurus" [ref=e8] [cursor=pointer]:
+        - /url: /opentaurus-site/
+      - generic [ref=e9]:
+        - link "MCP" [ref=e10] [cursor=pointer]:
+          - /url: /opentaurus-site/mcp
+        - link "CLI" [ref=e11] [cursor=pointer]:
+          - /url: /opentaurus-site/cli
+        - link "Agent 配置" [ref=e12] [cursor=pointer]:
+          - /url: /opentaurus-site/agents
+        - link "GitHub" [ref=e13] [cursor=pointer]:
+          - /url: https://github.com/youweichen0208/taurus-mcp-server
+  - main [ref=e14]:
+    - generic [ref=e15]:
+      - generic [ref=e17]:
+        - generic [ref=e18]:
+          - generic [ref=e21]: TaurusDB Native Scenario
+          - heading "先造出一张会被删掉的表，再谈恢复流程" [level=1] [ref=e22]
+          - paragraph [ref=e23]: 这个场景先在测试库里建表、写入样本数据、再显式删除，让对象真的进入 recycle bin。用户随后才会在 Cursor 里发起“能不能恢复、怎么恢复”的问题。
+          - generic [ref=e24]:
+            - link "返回 TaurusDB 总览" [ref=e25] [cursor=pointer]:
+              - /url: /opentaurus-site/mcp/taurusdb
+            - link "Dynamic Masking" [ref=e26] [cursor=pointer]:
+              - /url: /opentaurus-site/mcp/taurusdb/dynamic-masking
+            - link "Nonblocking DDL" [ref=e27] [cursor=pointer]:
+              - /url: /opentaurus-site/mcp/taurusdb/nonblocking-ddl
+        - generic [ref=e28]:
+          - generic [ref=e34]: recycle bin setup
+          - generic [ref=e35]:
+            - generic [ref=e36]: mysql> CREATE TABLE t_recycle_bin_test (...);
+            - generic [ref=e37]: mysql> INSERT INTO t_recycle_bin_test VALUES (...);
+            - generic [ref=e38]: mysql> DROP TABLE t_recycle_bin_test;
+            - generic [ref=e39]: cursor> 我误删了一张测试表，先确认能不能恢复
+      - generic [ref=e42]:
+        - generic [ref=e43]:
+          - generic [ref=e44]: Scenario 01
+          - heading "Recycle Bin" [level=3] [ref=e45]
+          - list [ref=e46]:
+            - listitem [ref=e47]: 基本功能：把误删表对象保留在 recycle bin 中，允许后续恢复，而不是删除后立刻不可逆。
+            - listitem [ref=e48]: 应用场景：误删测试表、误删演示数据表、上线前后人工清理误操作，都适合先查 recycle bin 再恢复。
+            - listitem [ref=e49]: "用处：把恢复动作变成有 guardrail 的两阶段流程，先拿 `confirmation_token`，再显式确认执行。"
+        - generic [ref=e50]:
+          - generic [ref=e51]:
+            - generic [ref=e52]:
+              - generic [ref=e53]: Setup Step
+              - heading "1. 建表并写入样本数据" [level=3] [ref=e54]
+            - generic [ref=e55]:
+              - article [ref=e56]:
+                - generic [ref=e62]: recycle bin setup
+                - generic [ref=e63]:
+                  - generic [ref=e64]: mysql> CREATE TABLE t_recycle_bin_test (...);
+                  - generic [ref=e65]: mysql> INSERT INTO t_recycle_bin_test VALUES (...);
+                  - generic [ref=e66]: mysql> SELECT * FROM t_recycle_bin_test ORDER BY id;
+              - article [ref=e67]:
+                - generic [ref=e68]: 执行后效果
+                - heading "执行后效果" [level=3] [ref=e69]
+                - list [ref=e70]:
+                  - listitem [ref=e71]: "测试表 `t_recycle_bin_test` 已创建完成，可以作为后续恢复对象。"
+                  - listitem [ref=e72]: 3 条样本数据已经写入，后面恢复成功后可以直接用它们做核对。
+                - table [ref=e73]:
+                  - rowgroup [ref=e74]:
+                    - row "id order_no status amount created_at" [ref=e75]:
+                      - columnheader "id" [ref=e76]
+                      - columnheader "order_no" [ref=e77]
+                      - columnheader "status" [ref=e78]
+                      - columnheader "amount" [ref=e79]
+                      - columnheader "created_at" [ref=e80]
+                  - rowgroup [ref=e81]:
+                    - row "1 rb-20260513-001 paid 128.50 2026-05-13 10:30:00" [ref=e82]:
+                      - cell "1" [ref=e83]
+                      - cell "rb-20260513-001" [ref=e84]
+                      - cell "paid" [ref=e85]
+                      - cell "128.50" [ref=e86]
+                      - cell "2026-05-13 10:30:00" [ref=e87]
+                    - row "2 rb-20260513-002 pending 88.00 2026-05-13 10:33:00" [ref=e88]:
+                      - cell "2" [ref=e89]
+                      - cell "rb-20260513-002" [ref=e90]
+                      - cell "pending" [ref=e91]
+                      - cell "88.00" [ref=e92]
+                      - cell "2026-05-13 10:33:00" [ref=e93]
+                    - row "3 rb-20260513-003 paid 256.00 2026-05-13 10:35:00" [ref=e94]:
+                      - cell "3" [ref=e95]
+                      - cell "rb-20260513-003" [ref=e96]
+                      - cell "paid" [ref=e97]
+                      - cell "256.00" [ref=e98]
+                      - cell "2026-05-13 10:35:00" [ref=e99]
+          - generic [ref=e100]:
+            - generic [ref=e101]:
+              - generic [ref=e102]: Setup Step
+              - heading "2. 显式删除，让对象进入 Recycle Bin" [level=3] [ref=e103]
+            - generic [ref=e104]:
+              - article [ref=e105]:
+                - generic [ref=e111]: recycle bin setup
+                - generic [ref=e112]:
+                  - generic [ref=e113]: mysql> DROP TABLE t_recycle_bin_test;
+                  - generic [ref=e114]: mysql> SHOW TABLES LIKE 't_recycle_bin_test';
+                  - generic [ref=e115]: cursor> 我误删了一张测试表，先确认能不能恢复
+              - article [ref=e116]:
+                - generic [ref=e117]: 执行后效果
+                - heading "执行后效果" [level=3] [ref=e118]
+                - list [ref=e119]:
+                  - listitem [ref=e120]: "业务库里已经看不到 `t_recycle_bin_test`，用户的问题到这里才成立。"
+                  - listitem [ref=e121]: 对象并没有彻底消失，而是进入 recycle bin，后面 MCP 会先查回收站再发起两阶段恢复。
+                - table [ref=e122]:
+                  - rowgroup [ref=e123]:
+                    - row "recycle_table original_table status next_action" [ref=e124]:
+                      - columnheader "recycle_table" [ref=e125]
+                      - columnheader "original_table" [ref=e126]
+                      - columnheader "status" [ref=e127]
+                      - columnheader "next_action" [ref=e128]
+                  - rowgroup [ref=e129]:
+                    - row "taurusdb_test@t_recycle_bin_test@6a0532d4 t_recycle_bin_test in recycle bin list_recycle_bin -> restore" [ref=e130]:
+                      - cell "taurusdb_test@t_recycle_bin_test@6a0532d4" [ref=e131]
+                      - cell "t_recycle_bin_test" [ref=e132]
+                      - cell "in recycle bin" [ref=e133]
+                      - cell "list_recycle_bin -> restore" [ref=e134]
+        - generic [ref=e135]:
+          - figure "删除 -> 回收站 -> 二阶段恢复 先创建并写入测试表，再删除进入 recycle bin，最后由 MCP 按 confirmation token 两阶段恢复。" [ref=e136]:
+            - img "Recycle Bin 恢复场景示意图" [ref=e137]
+            - generic [ref=e138]:
+              - strong [ref=e139]: 删除 -> 回收站 -> 二阶段恢复
+              - text: 先创建并写入测试表，再删除进入 recycle bin，最后由 MCP 按 confirmation token 两阶段恢复。
+          - article [ref=e140]:
+            - generic [ref=e141]: Recycle Bin
+            - heading "基本功能、应用场景、用处" [level=3] [ref=e142]
+            - list [ref=e143]:
+              - listitem [ref=e144]: 基本功能：把误删表对象保留在 recycle bin 中，允许后续恢复，而不是删除后立刻不可逆。
+              - listitem [ref=e145]: 应用场景：误删测试表、误删演示数据表、上线前后人工清理误操作，都适合先查 recycle bin 再恢复。
+              - listitem [ref=e146]: "用处：把恢复动作变成有 guardrail 的两阶段流程，先拿 `confirmation_token`，再显式确认执行。"
+        - generic [ref=e148]:
+          - generic [ref=e149]:
+            - generic [ref=e150]: Scenario 01
+            - heading "Recycle Bin 恢复必须把 confirmation token 流展示出来" [level=3] [ref=e151]
+            - paragraph [ref=e152]: 这个能力最能体现工具的安全边界。重点不是“能恢复”，而是“第一次不直接执行，第二次带 token 才真正恢复”。
+          - generic [ref=e153]:
+            - generic [ref=e154]:
+              - strong [ref=e155]: Cursor + OpenTaurus MCP
+              - generic [ref=e156]: recycle bin recovery
+            - generic [ref=e160]:
+              - generic [ref=e162]: 我误删了一张测试表，先确认能不能恢复，再帮我恢复回来。
+              - generic [ref=e164]: 我先检查 recycle bin 和实例能力，如果对象还在，再发起恢复并处理 confirmation token。
+              - generic [ref=e165]:
+                - generic [ref=e166]: Triggered Tools
+                - generic [ref=e167]:
+                  - generic [ref=e168]: list_taurus_features
+                  - generic [ref=e169]: list_recycle_bin
+                  - generic [ref=e170]: restore_recycle_bin_table
+              - generic [ref=e171]:
+                - generic [ref=e172]: 流式处理
+                - generic [ref=e173]:
+                  - generic [ref=e174]: "> 已确认实例开启 recycle bin，开始查询回收站对象列表..."
+                  - generic [ref=e175]: "> 目标表删除后仍在 recycle bin 中，回收对象指向 `taurusdb_test@t_recycle_bin_test@6a0532d4`，目标恢复位置是 `taurusdb_test.t_recycle_bin_test`。"
+                  - generic [ref=e176]: "> 第一次恢复请求按预期返回 `CONFIRMATION_REQUIRED`，并明确给出 `confirmation_token` 与 `native_restore` 方法，没有直接执行。"
+                  - generic [ref=e177]: "> 带 token 二次调用后，恢复成功，返回 `ok=true`、`destination_table=t_recycle_bin_test`、`duration_ms=206`，随后继续校验表和记录数。"
+                  - generic [ref=e178]: "> 这一步最能体现 MCP 对高风险动作的 guardrail 模型。"
+                - generic [ref=e179]:
+                  - generic [ref=e180]:
+                    - generic [ref=e181]: 回复 1
+                    - list [ref=e182]:
+                      - listitem [ref=e183]: 我已经确认目标对象还在 recycle bin，可以恢复。
+                      - listitem [ref=e184]: "第一次 `restore_recycle_bin_table` 没有直接执行，而是返回 `CONFIRMATION_REQUIRED` 和 `confirmation_token`，这一步必须显式展示出来。"
+                  - generic [ref=e185]:
+                    - generic [ref=e186]: 回复 2
+                    - list [ref=e187]:
+                      - listitem [ref=e188]: "二次调用带上 token 后恢复成功，目标表 `t_recycle_bin_test` 已回到原库。"
+                      - listitem [ref=e189]: 恢复后表和样本数据都已回到删除前状态。
+              - generic [ref=e190]:
+                - article [ref=e191]:
+                  - 'heading "`list_recycle_bin` 与恢复上下文" [level=4] [ref=e192]'
+                  - generic [ref=e193]:
+                    - generic [ref=e194]:
+                      - strong [ref=e195]: recycle bin
+                      - text: "`enabled`"
+                    - generic [ref=e196]:
+                      - strong [ref=e197]: recycle table
+                      - text: "`taurusdb_test@t_recycle_bin_test@6a0532d4`"
+                    - generic [ref=e198]:
+                      - strong [ref=e199]: destination
+                      - text: "`taurusdb_test.t_recycle_bin_test`"
+                  - list [ref=e200]:
+                    - listitem [ref=e201]: 目标表删除后没有丢失，而是进入 recycle bin，恢复动作有明确的源对象和目标位置。
+                    - listitem [ref=e202]: "第一次恢复返回中的 `confirmation_token` 已放进上面的流式处理中，不再单独做一张卡片。"
+                - article [ref=e203]:
+                  - heading "二次确认后的恢复结果" [level=4] [ref=e204]
+                  - table [ref=e205]:
+                    - rowgroup [ref=e206]:
+                      - row "字段 值" [ref=e207]:
+                        - columnheader "字段" [ref=e208]
+                        - columnheader "值" [ref=e209]
+                    - rowgroup [ref=e210]:
+                      - 'row "ok `true`" [ref=e211]':
+                        - cell "ok" [ref=e212]
+                        - 'cell "`true`" [ref=e213]'
+                      - 'row "recycle_table `taurusdb_test@t_recycle_bin_test@6a0532d4`" [ref=e214]':
+                        - cell "recycle_table" [ref=e215]
+                        - 'cell "`taurusdb_test@t_recycle_bin_test@6a0532d4`" [ref=e216]'
+                      - 'row "method `native_restore`" [ref=e217]':
+                        - cell "method" [ref=e218]
+                        - 'cell "`native_restore`" [ref=e219]'
+                      - 'row "destination_table `t_recycle_bin_test`" [ref=e220]':
+                        - cell "destination_table" [ref=e221]
+                        - 'cell "`t_recycle_bin_test`" [ref=e222]'
+                      - 'row "duration_ms `206`" [ref=e223]':
+                        - cell "duration_ms" [ref=e224]
+                        - 'cell "`206`" [ref=e225]'
+  - contentinfo [ref=e226]:
+    - generic [ref=e227]:
+      - generic [ref=e228]:
+        - strong [ref=e229]: OpenTaurus
+        - generic [ref=e230]: Componentized site scaffold powered by Vite and Vue 3.
+      - generic [ref=e231]:
+        - link "MCP" [ref=e232] [cursor=pointer]:
+          - /url: /opentaurus-site/mcp
+        - link "CLI" [ref=e233] [cursor=pointer]:
+          - /url: /opentaurus-site/cli
+        - link "Agent 配置" [ref=e234] [cursor=pointer]:
+          - /url: /opentaurus-site/agents

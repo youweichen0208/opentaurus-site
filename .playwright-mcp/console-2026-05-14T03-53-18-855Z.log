@@ -1,0 +1,11 @@
+[    7898ms] [ERROR] Failed to load resource: the server responded with a status of 404 () @ https://github.com/github-copilot/chat/entitlement:0
+[    8613ms] [ERROR] Failed to load resource: the server responded with a status of 404 () @ https://github.com/github-copilot/chat/entitlement:0
+[ 2933176ms] [ERROR] Failed to load resource: net::ERR_INTERNET_DISCONNECTED @ https://collector.github.com/github/collect:0
+[ 2933271ms] [ERROR] Failed to load resource: net::ERR_INTERNET_DISCONNECTED @ https://api.github.com/_private/browser/stats:0
+[ 2933279ms] [ERROR] Failed to load resource: net::ERR_INTERNET_DISCONNECTED @ https://collector.github.com/github/collect:0
+[ 2933279ms] [ERROR] Failed to load resource: net::ERR_INTERNET_DISCONNECTED @ https://collector.github.com/github/collect:0
+[ 7802269ms] [ERROR] Failed to load resource: net::ERR_INTERNET_DISCONNECTED @ https://collector.github.com/github/collect:0
+[ 7802271ms] [ERROR] Failed to load resource: net::ERR_INTERNET_DISCONNECTED @ https://api.github.com/_private/browser/stats:0
+[ 7802272ms] [ERROR] Failed to load resource: net::ERR_INTERNET_DISCONNECTED @ https://collector.github.com/github/collect:0
+[ 7802272ms] [ERROR] Failed to load resource: net::ERR_INTERNET_DISCONNECTED @ https://collector.github.com/github/collect:0
+[ 7837193ms] [ERROR] Failed to load resource: net::ERR_TIMED_OUT @ https://api.github.com/_private/browser/stats:0

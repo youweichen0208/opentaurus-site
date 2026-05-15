@@ -2,15 +2,14 @@
   <div>
     <HeroSection
       eyebrow="TaurusDB Native"
-      title="把差异化能力单独讲，不要埋在通用数据库故事里"
-      description="这一页只收 TaurusDB 专属能力：feature probe、Recycle Bin、Dynamic Masking 和 Nonblocking DDL。它们和通用的慢 SQL、查询解释不是同一类叙事。"
-      terminal-title="taurusdb native tools"
+      title="把每个专属能力拆成单独场景页"
+      description="这页只做分流，不再把 Recycle Bin、Dynamic Masking、Nonblocking DDL 的前置条件混在一起。每个能力都有自己的 setup、SQL、表预览和对话演示。"
+      terminal-title="taurusdb native index"
       :terminal-lines="[
-        'tool> list_taurus_features',
-        'tool> list_recycle_bin',
-        'tool> restore_recycle_bin_table',
-        'tool> execute_readonly_sql',
-        'focus: taurusdb-only capabilities'
+        '1. recycle bin recovery',
+        '2. dynamic masking comparison',
+        '3. nonblocking ddl verification',
+        'mode: one scenario per page'
       ]"
       :links="[
         { label: '返回总览', to: '/mcp' },
@@ -23,29 +22,24 @@
 
     <section class="band">
       <div class="section-inner">
-        <div class="demo-grid">
-          <ScenarioDemo v-for="scenario in taurusScenarios" :key="scenario.title" :scenario="scenario" />
+        <div class="section-head">
+          <h2>逐个场景展开</h2>
+          <p>用户先看到对象是怎么建出来的、数据长什么样、为什么会进入这个问题状态，然后才进入 Cursor + OpenTaurus MCP 的对话流。</p>
+        </div>
 
-          <section class="summary-band">
-            <article class="card">
-              <span class="mode-tag mono">Feature Probe</span>
-              <h3>能力探测</h3>
-              <ul class="compact-list">
-                <li>`list_taurus_features` 已识别真实 TaurusDB 实例。</li>
-                <li>内核版本 `8.0.22`，MySQL 兼容版本 `8.0`。</li>
-                <li>`flashback_query`、`recycle_bin`、`dynamic_masking`、`nonblocking_ddl` 都已看到可用。</li>
-              </ul>
-            </article>
-            <article class="card">
-              <span class="mode-tag mono">Nonblocking DDL</span>
-              <h3>基础行为验证</h3>
-              <ul class="compact-list">
-                <li>`nonblocking_ddl` 已在能力探测中可见。</li>
-                <li>DDL 执行期间，并发查询仍能正常返回。</li>
-                <li>这类能力适合放在专属能力页做收口，而不是混在事故排查页。</li>
-              </ul>
-            </article>
-          </section>
+        <div class="scenario-gallery">
+          <RouterLink
+            v-for="item in taurusNativeScenarioPages"
+            :key="item.slug"
+            class="shot-card"
+            :to="`/mcp/taurusdb/${item.slug}`"
+          >
+            <figcaption>
+              <span class="mode-tag mono">{{ item.tag }}</span>
+              <strong>{{ item.navTitle }}</strong>
+              <span>{{ item.description }}</span>
+            </figcaption>
+          </RouterLink>
         </div>
       </div>
     </section>
@@ -53,7 +47,7 @@
 </template>
 
 <script setup>
-import ScenarioDemo from "../components/ScenarioDemo.vue";
+import { RouterLink } from "vue-router";
 import HeroSection from "../components/HeroSection.vue";
-import { taurusScenarios } from "../data/mcp";
+import { taurusNativeScenarioPages } from "../data/taurusNative";
 </script>

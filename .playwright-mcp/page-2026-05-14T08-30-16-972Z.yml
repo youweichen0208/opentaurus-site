@@ -1,0 +1,68 @@
+- generic [ref=e3]:
+  - navigation [ref=e4]:
+    - generic [ref=e5]:
+      - link "OpenTaurus" [ref=e8] [cursor=pointer]:
+        - /url: /opentaurus-site/
+      - generic [ref=e9]:
+        - link "MCP" [ref=e10] [cursor=pointer]:
+          - /url: /opentaurus-site/mcp
+        - link "CLI" [ref=e11] [cursor=pointer]:
+          - /url: /opentaurus-site/cli
+        - link "Agent 配置" [ref=e12] [cursor=pointer]:
+          - /url: /opentaurus-site/agents
+        - link "GitHub" [ref=e13] [cursor=pointer]:
+          - /url: https://github.com/youweichen0208/taurus-mcp-server
+  - main [ref=e14]:
+    - generic [ref=e15]:
+      - generic [ref=e17]:
+        - generic [ref=e18]:
+          - generic [ref=e21]: OpenTaurus for TaurusDB
+          - heading "不要把所有故事塞进一个页面" [level=1] [ref=e22]
+          - paragraph [ref=e23]: 首页只回答三件事：OpenTaurus 是什么、有哪些入口、该从哪里开始。真实能力展示、命令示例、云端证据和 Agent 配置，分别进入独立板块。
+          - generic [ref=e24]:
+            - link "看 MCP 能力" [ref=e25] [cursor=pointer]:
+              - /url: /opentaurus-site/mcp
+            - link "看 Agent 配置" [ref=e26] [cursor=pointer]:
+              - /url: /opentaurus-site/agents
+        - generic [ref=e27]:
+          - generic [ref=e33]: opentaurus surfaces
+          - generic [ref=e34]:
+            - generic [ref=e35]: "1. MCP: 给 Claude / Cursor / VS Code 的工具面"
+            - generic [ref=e36]: "2. MCP 内含 Cloud evidence: CES / DAS / 实例解析"
+            - generic [ref=e37]: "3. CLI: init / smoke / runbook / context export"
+            - generic [ref=e38]: "4. Agents: Claude、Cursor、VS Code 接入方式"
+      - generic [ref=e41]:
+        - generic [ref=e42]:
+          - heading "按任务进入，而不是按实现堆叠" [level=2] [ref=e43]
+          - paragraph [ref=e44]: 不同访问者关心的不是同一个页面里所有模块，而是自己现在要完成哪件事。
+        - generic [ref=e45]:
+          - article [ref=e46]:
+            - generic [ref=e47]: MCP
+            - heading "工具能力展示" [level=3] [ref=e48]
+            - paragraph [ref=e49]: 现在已经收进真实云端测试报告，展示 diagnostics、Flashback、Recycle Bin、Dynamic Masking 等能力与截图证据。
+            - link "进入 MCP 页面" [ref=e50] [cursor=pointer]:
+              - /url: /opentaurus-site/mcp
+          - article [ref=e51]:
+            - generic [ref=e52]: CLI
+            - heading "命令入口与 runbook" [level=3] [ref=e53]
+            - paragraph [ref=e54]: "突出 `init`、`smoke`、`mcp call`、`runbook`，说明 CLI 是 companion，不是第二个 SQL 客户端。"
+            - link "进入 CLI 页面" [ref=e55] [cursor=pointer]:
+              - /url: /opentaurus-site/cli
+          - article [ref=e56]:
+            - generic [ref=e57]: Agent Setup
+            - heading "Claude / Cursor / VS Code 配置" [level=3] [ref=e58]
+            - paragraph [ref=e59]: 把“如何在 Agent 中接入 MCP”变成独立入口，避免和能力展示混在一起。
+            - link "进入配置页面" [ref=e60] [cursor=pointer]:
+              - /url: /opentaurus-site/agents
+  - contentinfo [ref=e61]:
+    - generic [ref=e62]:
+      - generic [ref=e63]:
+        - strong [ref=e64]: OpenTaurus
+        - generic [ref=e65]: Componentized site scaffold powered by Vite and Vue 3.
+      - generic [ref=e66]:
+        - link "MCP" [ref=e67] [cursor=pointer]:
+          - /url: /opentaurus-site/mcp
+        - link "CLI" [ref=e68] [cursor=pointer]:
+          - /url: /opentaurus-site/cli
+        - link "Agent 配置" [ref=e69] [cursor=pointer]:
+          - /url: /opentaurus-site/agents

@@ -25,11 +25,6 @@
         </tr>
       </tbody>
     </table>
-
-    <details v-for="proof in card.proofs || []" :key="proof.summary" class="proof-box">
-      <summary>{{ proof.summary }}</summary>
-      <img :src="proof.src" :alt="proof.alt" loading="lazy" />
-    </details>
   </article>
 </template>
 

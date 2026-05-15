@@ -1,0 +1,25 @@
+<svg width="1600" height="900" viewBox="0 0 1600 900" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1600" height="900" fill="#F1EDE5"/>
+  <rect x="70" y="70" width="1460" height="760" rx="28" fill="#FFF9F1" stroke="#D7C7AF" stroke-width="4"/>
+  <text x="120" y="145" fill="#42372A" font-size="44" font-family="Georgia, serif">Nonblocking DDL Verification</text>
+  <text x="120" y="190" fill="#7A6A55" font-size="24" font-family="Arial, sans-serif">Schema change runs on the left. Read queries keep returning on the right.</text>
+
+  <rect x="150" y="270" width="500" height="360" rx="24" fill="#FCE8C6" stroke="#DAAD5B" stroke-width="3"/>
+  <text x="198" y="330" fill="#4B3820" font-size="30" font-family="Arial, sans-serif">DDL Session</text>
+  <rect x="200" y="364" width="400" height="188" rx="16" fill="#FFF7E8" stroke="#E7C88E"/>
+  <text x="228" y="410" fill="#5C4831" font-size="22" font-family="Courier New, monospace">ALTER TABLE t_nonblocking_ddl_test</text>
+  <text x="228" y="450" fill="#5C4831" font-size="22" font-family="Courier New, monospace">ADD COLUMN remark VARCHAR(128);</text>
+  <text x="228" y="512" fill="#7A6A55" font-size="20" font-family="Arial, sans-serif">Schema is changing here.</text>
+
+  <rect x="950" y="270" width="500" height="360" rx="24" fill="#DDEDDC" stroke="#7EA57B" stroke-width="3"/>
+  <text x="1000" y="330" fill="#314730" font-size="30" font-family="Arial, sans-serif">Read Query Session</text>
+  <rect x="1000" y="364" width="400" height="188" rx="16" fill="#F7FFF6" stroke="#A6C9A2"/>
+  <text x="1028" y="410" fill="#365235" font-size="22" font-family="Courier New, monospace">SELECT id, sku, inventory</text>
+  <text x="1028" y="450" fill="#365235" font-size="22" font-family="Courier New, monospace">FROM t_nonblocking_ddl_test</text>
+  <text x="1028" y="512" fill="#365235" font-size="22" font-family="Courier New, monospace">ORDER BY id;</text>
+
+  <path d="M650 450H910" stroke="#9D8B66" stroke-width="8" stroke-dasharray="18 18" stroke-linecap="round"/>
+  <circle cx="800" cy="450" r="58" fill="#FFF3DA" stroke="#C79F58" stroke-width="4"/>
+  <text x="774" y="458" fill="#6E5430" font-size="28" font-family="Arial, sans-serif">DDL</text>
+  <text x="708" y="690" fill="#7A6A55" font-size="24" font-family="Arial, sans-serif">Verification target: read traffic is not visibly blocked while schema change is running.</text>
+</svg>

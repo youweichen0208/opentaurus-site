@@ -1,6 +1,6 @@
 <template>
   <section class="feature feature-stack">
-    <div class="demo-panel-intro">
+    <div v-if="!hideIntro" class="demo-panel-intro">
       <span class="label mono">{{ scenario.label }}</span>
       <h3>{{ scenario.title }}</h3>
       <p>{{ scenario.description }}</p>
@@ -34,23 +34,28 @@
                     {{ line }}
                   </div>
                 </div>
-                <div class="answer-card demo-step step-5">
-                  <div class="answer-title">最终回复</div>
-                  <ul class="answer-list">
-                    <li v-for="item in scenario.finalAnswer" :key="item">{{ item }}</li>
-                  </ul>
+                <div class="response-stack demo-step step-5">
+                  <div
+                    v-for="response in scenario.agentResponses"
+                    :key="response.title"
+                    class="answer-card"
+                  >
+                    <div class="answer-title">{{ response.title }}</div>
+                    <ul class="answer-list">
+                      <li v-for="item in response.lines" :key="item">{{ item }}</li>
+                    </ul>
+                  </div>
                 </div>
               </div>
+              <div class="agent-side">
+                <OutputCard
+                  v-for="(card, index) in scenario.outputCards"
+                  :key="card.title"
+                  :card="card"
+                  :step="index + 6"
+                />
+              </div>
             </div>
-          </div>
-
-          <div class="agent-side">
-            <OutputCard
-              v-for="(card, index) in scenario.outputCards"
-              :key="card.title"
-              :card="card"
-              :step="index + 3"
-            />
           </div>
         </div>
       </div>
@@ -63,5 +68,9 @@ import OutputCard from "./OutputCard.vue";
 
 defineProps({
   scenario: Object,
+  hideIntro: {
+    type: Boolean,
+    default: false,
+  },
 });
 </script>
