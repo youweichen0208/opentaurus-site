@@ -1272,6 +1272,102 @@ section.band {
   box-shadow: 0 20px 60px rgba(38, 37, 30, 0.12);
 }
 
+/* Claude Code 专属终端风格 */
+.claude-terminal {
+  border-radius: 12px;
+  border: 1px solid rgba(201, 106, 43, 0.15);
+  background: #0d0d0c;
+}
+
+.claude-terminal .terminal-head {
+  background: rgba(201, 106, 43, 0.08);
+  border-bottom: 1px solid rgba(201, 106, 43, 0.12);
+}
+
+.claude-terminal .terminal-title {
+  color: rgba(201, 106, 43, 0.9);
+  font-weight: 500;
+}
+
+/* Claude Code 对话风格 - 用户输入 */
+.claude-chat-line {
+  color: rgba(255, 255, 255, 0.96);
+  font-weight: 500;
+  line-height: 1.5;
+}
+
+.claude-chat-line::before {
+  content: "❯ ";
+  color: rgba(255, 255, 255, 0.92);
+}
+
+/* MCP 工具调用 */
+.claude-tool-call {
+  margin-top: 12px;
+  padding: 0;
+  background: transparent;
+  border: none;
+}
+
+.claude-tool-call .tool-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+}
+
+.claude-tool-call .tool-icon {
+  color: rgba(126, 231, 135, 0.95);
+  font-size: 1rem;
+  line-height: 1.4;
+}
+
+.claude-tool-call .tool-name {
+  color: rgba(237, 236, 236, 0.88);
+  font-weight: 600;
+}
+
+.claude-tool-call .tool-params {
+  color: rgba(237, 236, 236, 0.6);
+  font-size: 0.88em;
+}
+
+/* MCP 工具返回 */
+.claude-tool-result {
+  margin-top: 6px;
+  padding-left: 20px;
+  color: rgba(237, 236, 236, 0.6);
+}
+
+.claude-tool-result::before {
+  content: "⎿ ";
+  color: rgba(237, 236, 236, 0.5);
+}
+
+.claude-tool-result .result-key {
+  color: rgba(121, 192, 255, 0.88);
+}
+
+.claude-tool-result .result-value {
+  color: rgba(126, 231, 135, 0.88);
+}
+
+/* Claude 回复 */
+.claude-response {
+  margin-top: 14px;
+  color: rgba(126, 231, 135, 0.88);
+  line-height: 1.6;
+}
+
+/* Shell 终端风格 - 用于普通 shell 命令 */
+.setup-terminal-card:not(.claude-terminal) .setup-command-line::before {
+  content: "$ ";
+  color: rgba(121, 192, 255, 0.88);
+}
+
+.setup-terminal-card:not(.claude-terminal) .setup-result-line::before {
+  content: "";
+}
+
 .setup-terminal-body {
   min-height: 148px;
   gap: 10px;

@@ -5,7 +5,7 @@ export const agentSetupPages = [
     navTitle: "Cursor 配置教程",
     title: "Cursor 接入 MCP 的完整流程",
     description:
-      "Cursor 使用 mcpServers 配置结构，CLI 会自动写入 .cursor/mcp.json。这一页展示完整配置步骤。",
+      "Cursor 使用 mcpServers 配置结构，手动编辑 .cursor/mcp.json。这一页展示完整配置步骤。",
     links: [
       { label: "返回 Agent Setup", to: "/agents" },
       { label: "VS Code 配置", to: "/agents/vscode" },
@@ -14,7 +14,7 @@ export const agentSetupPages = [
     prep: {
       overviewTitle: "Cursor MCP Server 配置",
       flowIntro:
-        "下面按真实执行顺序展开：先构建 MCP Server，再通过 CLI 自动生成配置，最后验证连通性。",
+        "下面按真实执行顺序展开：先构建 MCP Server，再手动编辑配置文件，最后验证连通性。",
       steps: [
         {
           title: "1. 构建 MCP Server",
@@ -40,50 +40,44 @@ export const agentSetupPages = [
           ],
         },
         {
-          title: "2. 使用 CLI 自动生成配置",
-          terminalTitle: "cursor mcp init",
+          title: "2. 创建 .cursor/mcp.json 配置文件",
+          terminalTitle: "cursor mcp config",
           interactions: [
             {
               commandLines: [
-                "$ npx @huaweicloud/taurusdb-mcp init --client cursor",
+                "# 在项目根目录创建 .cursor/mcp.json",
               ],
               resultLines: [
-                "✓ .cursor/mcp.json written",
-                "配置文件已写入 Cursor 的 MCP 配置目录",
+                "Cursor 使用 mcpServers 配置结构",
               ],
             },
             {
               commandLines: [
-                "$ cat .cursor/mcp.json",
+                "{",
+                "  \"mcpServers\": {",
+                "    \"huaweicloud-taurusdb\": {",
+                "      \"command\": \"node\",",
+                "      \"args\": [\"/path/to/mcp/dist/index.js\"],",
+                "      \"env\": {",
+                "        \"TAURUSDB_CLOUD_REGION\": \"<your-region>\",",
+                "        \"TAURUSDB_CLOUD_ACCESS_KEY_ID\": \"<your-ak>\",",
+                "        \"TAURUSDB_CLOUD_SECRET_ACCESS_KEY\": \"<your-sk>\"",
+                "      }",
+                "    }",
+                "  }",
+                "}",
               ],
               resultLines: [
-                "查看生成的配置结构",
+                "把 region + AK/SK 写进 env 字段",
+                "args 指向 MCP Server 的入口文件",
               ],
-              table: {
-                headers: ["key", "value"],
-                rows: [
-                  ["mcpServers", "包含 huaweicloud-taurusdb"],
-                  ["command", "node /path/to/mcp/dist/index.js"],
-                  ["env", "TAURUSDB_CLOUD_REGION=..."],
-                ],
-              },
             },
           ],
         },
         {
-          title: "3. 补充云凭证环境变量",
-          terminalTitle: "edit cursor mcp config",
+          title: "3. 重启 Cursor 使配置生效",
+          terminalTitle: "reload cursor",
           interactions: [
-            {
-              commandLines: [
-                "# 手动编辑 .cursor/mcp.json",
-                "# 在 env 字段中添加华为云凭证",
-              ],
-              resultLines: [
-                "Cursor 的 MCP 配置支持 env 字段",
-                "需要手动补充 AK/SK 等敏感信息",
-              ],
-            },
             {
               commandLines: [
                 "$ cursor --reload",
@@ -130,7 +124,7 @@ export const agentSetupPages = [
     navTitle: "VS Code 配置教程",
     title: "VS Code 接入 MCP 的完整流程",
     description:
-      "VS Code 使用 servers 配置结构，CLI 会自动写入 VS Code 的 MCP 配置。这一页展示完整配置步骤。",
+      "VS Code 使用 servers 配置结构，手动编辑 MCP 配置。这一页展示完整配置步骤。",
     links: [
       { label: "返回 Agent Setup", to: "/agents" },
       { label: "Cursor 配置", to: "/agents/cursor" },
@@ -139,7 +133,7 @@ export const agentSetupPages = [
     prep: {
       overviewTitle: "VS Code MCP Server 配置",
       flowIntro:
-        "下面按真实执行顺序展开：先构建 MCP Server，再通过 CLI 自动生成配置，最后验证连通性。",
+        "下面按真实执行顺序展开：先构建 MCP Server，再手动编辑配置文件，最后验证连通性。",
       steps: [
         {
           title: "1. 构建 MCP Server",
@@ -165,25 +159,36 @@ export const agentSetupPages = [
           ],
         },
         {
-          title: "2. 使用 CLI 自动生成配置",
-          terminalTitle: "vscode mcp init",
+          title: "2. 编辑 VS Code MCP 配置",
+          terminalTitle: "vscode mcp config",
           interactions: [
             {
               commandLines: [
-                "$ npx @huaweicloud/taurusdb-mcp init --client vscode",
+                "# VS Code MCP 配置位置：~/.vscode/mcp.json",
               ],
               resultLines: [
-                "✓ VS Code MCP config written",
-                "配置文件已写入 VS Code 的 MCP 配置目录",
+                "VS Code 使用 servers 配置结构",
               ],
             },
             {
               commandLines: [
-                "# VS Code 使用 servers 配置结构",
+                "{",
+                "  \"servers\": {",
+                "    \"huaweicloud-taurusdb\": {",
+                "      \"command\": \"node\",",
+                "      \"args\": [\"/path/to/mcp/dist/index.js\"],",
+                "      \"env\": {",
+                "        \"TAURUSDB_CLOUD_REGION\": \"<your-region>\",",
+                "        \"TAURUSDB_CLOUD_ACCESS_KEY_ID\": \"<your-ak>\",",
+                "        \"TAURUSDB_CLOUD_SECRET_ACCESS_KEY\": \"<your-sk>\"",
+                "      }",
+                "    }",
+                "  }",
+                "}",
               ],
               resultLines: [
-                "配置结构与 Claude Code 类似",
-                "但配置文件位置不同",
+                "把 region + AK/SK 写进 env 字段",
+                "args 指向 MCP Server 的入口文件",
               ],
               table: {
                 headers: ["client", "config location", "structure"],
@@ -196,19 +201,9 @@ export const agentSetupPages = [
           ],
         },
         {
-          title: "3. 补充云凭证环境变量",
-          terminalTitle: "edit vscode mcp config",
+          title: "3. 重启 VS Code 使配置生效",
+          terminalTitle: "reload vscode",
           interactions: [
-            {
-              commandLines: [
-                "# 手动编辑 VS Code MCP 配置",
-                "# 在 env 字段中添加华为云凭证",
-              ],
-              resultLines: [
-                "VS Code 的 MCP 配置同样支持 env 字段",
-                "需要手动补充 AK/SK 等敏感信息",
-              ],
-            },
             {
               commandLines: [
                 "# 重启 VS Code 使配置生效",

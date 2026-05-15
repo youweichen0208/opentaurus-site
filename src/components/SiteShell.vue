@@ -8,7 +8,6 @@
         </div>
         <div class="nav-links">
           <RouterLink to="/mcp">MCP</RouterLink>
-          <RouterLink to="/cli">CLI</RouterLink>
           <RouterLink to="/agents">Agent 配置</RouterLink>
           <a
             href="https://github.com/youweichen0208/taurus-mcp-server"
@@ -33,7 +32,6 @@
         </div>
         <div class="footer-links">
           <RouterLink to="/mcp">MCP</RouterLink>
-          <RouterLink to="/cli">CLI</RouterLink>
           <RouterLink to="/agents">Agent 配置</RouterLink>
         </div>
       </div>

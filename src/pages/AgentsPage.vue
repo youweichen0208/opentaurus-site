@@ -4,11 +4,11 @@
       eyebrow="Agent Setup"
       title="接入 MCP 的完整配置教程"
       description="如何在 Claude Code、Cursor、VS Code 里接入 TaurusDB MCP Server。这一页面向第一次配置 Agent 的用户，按真实可走通的顺序展开。"
-      terminal-title="init client config"
+      terminal-title="mcp client config"
       :terminal-lines="[
-        'npx> @huaweicloud/taurusdb-mcp init --client claude',
-        'npx> @huaweicloud/taurusdb-mcp init --client cursor',
-        'npx> @huaweicloud/taurusdb-mcp init --client vscode',
+        'Claude Code → claude mcp add huaweicloud-taurusdb',
+        'Cursor → .cursor/mcp.json',
+        'VS Code → servers config',
         'adds server: huaweicloud-taurusdb'
       ]"
       :links="[
@@ -43,7 +43,7 @@
                   <span class="y"></span>
                   <span class="g"></span>
                 </div>
-                <span class="terminal-title mono">build mcp server</span>
+                <span class="terminal-title mono">shell</span>
               </div>
               <div class="terminal-body setup-terminal-body">
                 <div class="setup-interaction">
@@ -69,7 +69,7 @@
                   <span class="y"></span>
                   <span class="g"></span>
                 </div>
-                <span class="terminal-title mono">claude mcp add</span>
+                <span class="terminal-title mono">shell</span>
               </div>
               <div class="terminal-body setup-terminal-body">
                 <div class="setup-interaction">
@@ -102,7 +102,7 @@
                   <span class="y"></span>
                   <span class="g"></span>
                 </div>
-                <span class="terminal-title mono">claude mcp list</span>
+                <span class="terminal-title mono">shell</span>
               </div>
               <div class="terminal-body setup-terminal-body">
                 <div class="setup-interaction">
@@ -127,21 +127,26 @@
               <span class="mode-tag mono">Step 4</span>
               <h3>验证云控制面连通</h3>
             </div>
-            <p class="quote-box">在 Claude Code 里直接调用 `list_cloud_taurus_instances`，查询成功说明当前 MCP 会话已经能使用这组凭证访问华为云控制面。</p>
-            <div class="setup-terminal-card">
+            <p class="quote-box">在 Claude Code 里用自然语言提问，让 Claude 调用 MCP 工具查询华为云实例列表。</p>
+            <div class="setup-terminal-card claude-terminal">
               <div class="terminal-head">
-                <div class="lights">
-                  <span class="r"></span>
-                  <span class="y"></span>
-                  <span class="g"></span>
-                </div>
-                <span class="terminal-title mono">verify cloud control plane</span>
+                <span class="terminal-title mono">claude code</span>
               </div>
               <div class="terminal-body setup-terminal-body">
                 <div class="setup-interaction">
-                  <div class="setup-command-line mono">> list_cloud_taurus_instances</div>
-                  <div class="setup-result-line mono">✓ Instance list returned successfully</div>
-                  <div class="setup-result-line mono">说明 MCP 会话已经能访问华为云控制面</div>
+                  <div class="claude-chat-line mono">帮我查一下华为云上的 TaurusDB 实例列表</div>
+                  <div class="claude-tool-call mono">
+                    <div class="tool-header">
+                      <span class="tool-icon">⏺</span>
+                      <span class="tool-name">huaweicloud-taurusdb - list_cloud_taurus_instances</span>
+                      <span class="tool-params">(MCP)</span>
+                    </div>
+                    <div class="claude-tool-result">
+                      <span class="result-key">ok:</span> <span class="result-value">true</span>,
+                      <span class="result-key">instances:</span> <span class="result-value">[...]</span>
+                    </div>
+                  </div>
+                  <div class="claude-response">返回 3 个实例，说明 MCP 会话已经能访问华为云控制面。</div>
                 </div>
               </div>
             </div>
@@ -153,22 +158,26 @@
               <span class="mode-tag mono">Step 5</span>
               <h3>验证数据库数据面连通</h3>
             </div>
-            <p class="quote-box">控制面通过后，再补最小数据面模板，然后在 Claude Code 里调用 `execute_readonly_sql`。</p>
-            <div class="setup-terminal-card">
+            <p class="quote-box">控制面通过后，继续用自然语言让 Claude 执行一条简单的 SQL 查询。</p>
+            <div class="setup-terminal-card claude-terminal">
               <div class="terminal-head">
-                <div class="lights">
-                  <span class="r"></span>
-                  <span class="y"></span>
-                  <span class="g"></span>
-                </div>
-                <span class="terminal-title mono">verify data plane</span>
+                <span class="terminal-title mono">claude code</span>
               </div>
               <div class="terminal-body setup-terminal-body">
                 <div class="setup-interaction">
-                  <div class="setup-command-line mono">> execute_readonly_sql</div>
-                  <div class="setup-command-line mono">  sql: "SELECT 1 AS ok"</div>
-                  <div class="setup-result-line mono">✓ Query OK, 1 row in set</div>
-                  <div class="setup-result-line mono">说明数据库数据面也已连通</div>
+                  <div class="claude-chat-line mono">在数据库里执行 SELECT 1 验证连通</div>
+                  <div class="claude-tool-call mono">
+                    <div class="tool-header">
+                      <span class="tool-icon">⏺</span>
+                      <span class="tool-name">huaweicloud-taurusdb - execute_readonly_sql</span>
+                      <span class="tool-params">(MCP)</span>
+                    </div>
+                    <div class="claude-tool-result">
+                      <span class="result-key">ok:</span> <span class="result-value">true</span>,
+                      <span class="result-key">rows:</span> <span class="result-value">1</span>
+                    </div>
+                  </div>
+                  <div class="claude-response">Query OK, 1 row in set — 数据库数据面已连通。</div>
                 </div>
               </div>
             </div>
@@ -185,7 +194,7 @@
         <div class="section-head">
           <span class="mode-tag mono">Cursor & VS Code</span>
           <h2>其他客户端接入</h2>
-          <p>Cursor 和 VS Code 使用不同的 MCP 配置结构，通过 CLI 自动生成配置文件。</p>
+          <p>Cursor 和 VS Code 使用不同的 MCP 配置结构，点击下方卡片查看完整配置步骤。</p>
         </div>
 
         <div class="triptych">
@@ -203,7 +212,7 @@
           <article class="card">
             <span class="mode-tag mono">Manual</span>
             <h3>手动配置</h3>
-            <p>如果 CLI 不支持你的客户端，可以手动复制 Claude Code 的配置结构并调整配置文件位置。</p>
+            <p>如果你的客户端不在上述列表中，可以手动复制配置结构并调整配置文件位置。</p>
             <ul class="compact-list">
               <li>Cursor: `.cursor/mcp.json` 使用 `mcpServers`</li>
               <li>VS Code: 使用 `servers` 配置结构</li>
@@ -268,7 +277,7 @@
                 <span class="y"></span>
                 <span class="g"></span>
               </div>
-              <span class="terminal-title mono">claude mcp get</span>
+              <span class="terminal-title mono">shell</span>
             </div>
             <div class="terminal-body setup-terminal-body">
               <div class="setup-interaction">
