@@ -2,14 +2,12 @@
   <div>
     <HeroSection
       eyebrow="Data Query"
-      title="把查询结果、执行解释和历史态对照拆开讲清楚"
-      description="这一页不讨论锁和恢复，只聚焦查询本身：怎么读当前数据、怎么解释执行路径、怎么回看历史时刻的数据状态。"
+      title="先把只读查询和标准执行解释讲清楚"
+      description="这一页只保留数据库通用的数据访问问题：怎么安全读取当前数据、怎么用标准 explain 理解查询路径。Flashback Query 和 Enhanced Explain 已放到 TaurusDB 专属能力。"
       terminal-title="query toolchain"
       :terminal-lines="[
         'tool> execute_readonly_sql',
         'tool> explain_sql',
-        'tool> explain_sql_enhanced',
-        'tool> flashback_query',
         'tool> list_taurus_features'
       ]"
       :links="[

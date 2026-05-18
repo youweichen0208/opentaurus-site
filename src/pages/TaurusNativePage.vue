@@ -2,13 +2,15 @@
   <div>
     <HeroSection
       eyebrow="TaurusDB Native"
-      title="把每个专属能力拆成单独场景页"
-      description="这页只做分流，不再把 Recycle Bin、Dynamic Masking、Nonblocking DDL 的前置条件混在一起。每个能力都有自己的 setup、SQL、表预览和对话演示。"
+      title="把 TaurusDB 专属能力拆成单独场景页"
+      description="这页只做专属能力分流：Recycle Bin、Dynamic Masking、Flashback Query、Enhanced Explain、Nonblocking DDL 都各自独立承载，不再混在通用查询页里。"
       terminal-title="taurusdb native index"
       :terminal-lines="[
         '1. recycle bin recovery',
         '2. dynamic masking comparison',
-        '3. nonblocking ddl verification',
+        '3. flashback query comparison',
+        '4. enhanced explain coverage',
+        '5. nonblocking ddl verification',
         'mode: one scenario per page'
       ]"
       :links="[

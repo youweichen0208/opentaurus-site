@@ -137,7 +137,8 @@ export const taurusNativeScenarioPages = [
     links: [
       { label: "返回 TaurusDB 总览", to: "/mcp/taurusdb" },
       { label: "Recycle Bin", to: "/mcp/taurusdb/recycle-bin-recovery" },
-      { label: "Nonblocking DDL", to: "/mcp/taurusdb/nonblocking-ddl" },
+      { label: "Flashback Query", to: "/mcp/taurusdb/flashback-query" },
+      { label: "Enhanced Explain", to: "/mcp/taurusdb/enhanced-explain" },
     ],
     scenario: taurusScenarios[1],
     prep: {
@@ -236,8 +237,180 @@ export const taurusNativeScenarioPages = [
     },
   },
   {
-    slug: "nonblocking-ddl",
+    slug: "flashback-query",
     tag: "Scenario 03",
+    navTitle: "Flashback Query",
+    title: "按时间点回看历史态，再和当前态对照",
+    description:
+      "这个场景先准备一条可回查的记录，记录更新前后时间点，再进入 Cursor + OpenTaurus MCP 调用 flashback_query 对比历史态和当前态。",
+    terminalTitle: "flashback query setup",
+    terminalLines: [
+      "mysql> CREATE TABLE taurusdb_test.t_flashback_query_test (...) BACKQUERY=1;",
+      "mysql> INSERT INTO taurusdb_test.t_flashback_query_test VALUES (..., 'draft', ...);",
+      "mysql> SELECT NOW() AS t1;",
+      "mysql> UPDATE taurusdb_test.t_flashback_query_test SET status = 'published';",
+      "mysql> SELECT NOW() AS t2;",
+    ],
+    links: [
+      { label: "返回 TaurusDB 总览", to: "/mcp/taurusdb" },
+      { label: "Dynamic Masking", to: "/mcp/taurusdb/dynamic-masking" },
+      { label: "Enhanced Explain", to: "/mcp/taurusdb/enhanced-explain" },
+      { label: "Nonblocking DDL", to: "/mcp/taurusdb/nonblocking-ddl" },
+    ],
+    scenario: taurusScenarios[3],
+    prep: {
+      overviewTitle: "Flashback Query",
+      flowIntro:
+        "下面按真实执行顺序展开：先开启可回查表并制造一次状态变更，再进入 Cursor + OpenTaurus MCP 对比历史态和当前态。",
+      demoStepTitle: "Cursor + OpenTaurus MCP 历史态对照流",
+      demoStepDescription:
+        "上面的记录已经发生状态变化，下面展示 MCP 如何确认 flashback 前置条件，并按历史时间点回查旧值。",
+      summary: [
+        "基本功能：按历史时间点读取记录旧值，并与当前普通查询结果对照。",
+        "应用场景：误更新排查、状态流转核对、审计前的快速事实确认。",
+        "用处：不用先恢复数据，也能回答“某个时刻这条记录到底是什么值”。",
+      ],
+      steps: [
+        {
+          title: "1. 准备可回查表和初始记录",
+          terminalTitle: "flashback query setup",
+          interactions: [
+            {
+              commandLines: [
+                "mysql> CREATE TABLE taurusdb_test.t_flashback_query_test (",
+                "mysql>   id BIGINT PRIMARY KEY,",
+                "mysql>   name VARCHAR(64) NOT NULL,",
+                "mysql>   status VARCHAR(16) NOT NULL,",
+                "mysql>   updated_at DATETIME NOT NULL",
+                "mysql> ) BACKQUERY=1;",
+              ],
+              resultLines: ["Table created with BACKQUERY=1."],
+            },
+            {
+              commandLines: [
+                "mysql> INSERT INTO taurusdb_test.t_flashback_query_test",
+                "mysql>   VALUES (1, 'flashback-a', 'draft', '2026-05-13 11:03:39');",
+              ],
+              resultLines: ["Query OK, 1 row affected."],
+              table: {
+                headers: ["id", "name", "status", "updated_at"],
+                rows: [["1", "flashback-a", "draft", "2026-05-13 11:03:39"]],
+              },
+            },
+          ],
+        },
+        {
+          title: "2. 记录时间点并制造状态变化",
+          terminalTitle: "flashback query setup",
+          interactions: [
+            {
+              commandLines: ["mysql> SELECT NOW() AS t1;"],
+              resultLines: ["t1 = 2026-05-13 11:04:39"],
+            },
+            {
+              commandLines: [
+                "mysql> UPDATE taurusdb_test.t_flashback_query_test",
+                "mysql> SET status = 'published', updated_at = '2026-05-13 11:04:39'",
+                "mysql> WHERE id = 1;",
+              ],
+              resultLines: ["Query OK, 1 row affected."],
+            },
+            {
+              commandLines: ["mysql> SELECT id, name, status, updated_at FROM taurusdb_test.t_flashback_query_test WHERE id = 1;"],
+              resultLines: ["1 row in set."],
+              table: {
+                headers: ["id", "name", "status", "updated_at"],
+                rows: [["1", "flashback-a", "published", "2026-05-13 11:04:39"]],
+              },
+            },
+          ],
+        },
+      ],
+    },
+  },
+  {
+    slug: "enhanced-explain",
+    tag: "Scenario 04",
+    navTitle: "Enhanced Explain",
+    title: "单独验证 TaurusDB 增强 Explain 命中情况",
+    description:
+      "这个场景不再放在通用查询页里，而是专门展示 explain_sql_enhanced 如何识别 offset_pushdown、parallel_query、ndp_pushdown 等 TaurusDB 优化提示。",
+    terminalTitle: "enhanced explain setup",
+    terminalLines: [
+      "mysql> SELECT ... LIMIT 100 OFFSET 500;",
+      "mysql> EXPLAIN SELECT ...;",
+      "tool> explain_sql_enhanced",
+      "hints> offset_pushdown / parallel_query / ndp_pushdown",
+    ],
+    links: [
+      { label: "返回 TaurusDB 总览", to: "/mcp/taurusdb" },
+      { label: "Flashback Query", to: "/mcp/taurusdb/flashback-query" },
+      { label: "Dynamic Masking", to: "/mcp/taurusdb/dynamic-masking" },
+      { label: "Nonblocking DDL", to: "/mcp/taurusdb/nonblocking-ddl" },
+    ],
+    scenario: taurusScenarios[4],
+    prep: {
+      overviewTitle: "Enhanced Explain",
+      flowIntro:
+        "下面按真实执行顺序展开：先准备会触发不同优化方向的查询，再进入 Cursor + OpenTaurus MCP 读取增强 explain 结果。",
+      demoStepTitle: "Cursor + OpenTaurus MCP 增强 Explain 验证流",
+      demoStepDescription:
+        "上面的查询上下文已经准备好，下面展示 MCP 如何把增强 explain 的 taurusHints 转成客户能理解的优化命中说明。",
+      summary: [
+        "基本功能：在标准执行计划之外返回 TaurusDB 专属优化提示。",
+        "应用场景：确认 offset pushdown、parallel query、NDP pushdown 是否实际命中。",
+        "用处：把“是否吃到 TaurusDB 优化”从猜测变成可解释结果。",
+      ],
+      steps: [
+        {
+          title: "1. 准备需要解释的查询形态",
+          terminalTitle: "enhanced explain setup",
+          interactions: [
+            {
+              commandLines: [
+                "mysql> SELECT id, user_id, status, amount",
+                "mysql> FROM taurusdb_test.t_orders_test",
+                "mysql> ORDER BY id LIMIT 100 OFFSET 500;",
+              ],
+              resultLines: ["Query shape prepared for offset pushdown verification."],
+            },
+            {
+              commandLines: [
+                "mysql> SELECT /*+ parallel */ category, COUNT(*)",
+                "mysql> FROM taurusdb_test.t_storage_test",
+                "mysql> GROUP BY category;",
+              ],
+              resultLines: ["Query shape prepared for parallel query verification."],
+            },
+          ],
+        },
+        {
+          title: "2. 记录增强 Explain 的关注点",
+          terminalTitle: "enhanced explain setup",
+          interactions: [
+            {
+              commandLines: ["tool> explain_sql_enhanced"],
+              resultLines: [
+                "Expected TaurusDB hints: offset_pushdown / parallel_query / ndp_pushdown.",
+                "The MCP flow below turns those hints into readable conclusions.",
+              ],
+              table: {
+                headers: ["hint", "customer meaning"],
+                rows: [
+                  ["offset_pushdown", "分页偏移下推，降低无效扫描"],
+                  ["parallel_query", "并行执行，提高分析型查询吞吐"],
+                  ["ndp_pushdown", "近数据处理下推，减少数据搬运"],
+                ],
+              },
+            },
+          ],
+        },
+      ],
+    },
+  },
+  {
+    slug: "nonblocking-ddl",
+    tag: "Scenario 05",
     navTitle: "Nonblocking DDL",
     title: "先准备一张在被查询的表，再验证 DDL 不打断读流量",
     description:
@@ -254,10 +427,14 @@ export const taurusNativeScenarioPages = [
       { label: "Recycle Bin", to: "/mcp/taurusdb/recycle-bin-recovery" },
       { label: "Dynamic Masking", to: "/mcp/taurusdb/dynamic-masking" },
     ],
+    scenario: taurusScenarios[2],
     prep: {
       overviewTitle: "Nonblocking DDL",
       flowIntro:
-        "下面按真实执行顺序展开：先在 MySQL 里准备业务表和样本数据，再执行 DDL 与查询验证，最后收口到这段能力为什么重要。",
+        "下面按真实执行顺序展开：先在 MySQL 里准备业务表和样本数据，再进入 Cursor + OpenTaurus MCP 对照 DDL 与并发查询时间线。",
+      demoStepTitle: "Cursor + OpenTaurus MCP 在线 DDL 验证流",
+      demoStepDescription:
+        "上面的测试表已经准备好，下面展示 MCP 如何确认 nonblocking_ddl 能力，并把 DDL 期间查询侧仍能返回这件事讲清楚。",
       summary: [
         "基本功能：执行 DDL 时尽量不阻断正在进行的只读访问，把 schema 变更对业务读流量的影响降到最低。",
         "应用场景：在线加列、结构微调、灰度升级阶段，需要一边改 schema 一边保持查询可用。",

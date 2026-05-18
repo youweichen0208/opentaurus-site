@@ -7,7 +7,9 @@
           <RouterLink class="brand-name" to="/">OpenTaurus</RouterLink>
         </div>
         <div class="nav-links">
-          <RouterLink to="/mcp">MCP</RouterLink>
+          <RouterLink to="/mcp/diagnostics">运维诊断</RouterLink>
+          <RouterLink to="/mcp/query">数据查询</RouterLink>
+          <RouterLink to="/mcp/taurusdb">专属能力</RouterLink>
           <RouterLink to="/agents">Agent 配置</RouterLink>
           <a
             href="https://github.com/youweichen0208/taurus-mcp-server"
@@ -31,7 +33,9 @@
           <span>Componentized site scaffold powered by Vite and Vue 3.</span>
         </div>
         <div class="footer-links">
-          <RouterLink to="/mcp">MCP</RouterLink>
+          <RouterLink to="/mcp/diagnostics">运维诊断</RouterLink>
+          <RouterLink to="/mcp/query">数据查询</RouterLink>
+          <RouterLink to="/mcp/taurusdb">专属能力</RouterLink>
           <RouterLink to="/agents">Agent 配置</RouterLink>
         </div>
       </div>

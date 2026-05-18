@@ -2,13 +2,13 @@
   <div>
     <HeroSection
       eyebrow="MCP Overview"
-      title="不要把所有 TaurusDB 故事都塞进一页"
-      description="现在改成总览页分流：运维诊断看问题怎么被定位，数据查询看只读访问与解释链路，TaurusDB 专属能力看 recycle bin、dynamic masking、flashback 等差异化能力。"
-      terminal-title="opentaurus mcp sections"
+      title="TaurusDB MCP 的能力地图"
+      description="这个站点本身就是 TaurusDB MCP 说明页，入口按客户问题拆开：运维诊断、通用数据查询、TaurusDB 专属能力和 Agent 配置。"
+      terminal-title="taurusdb mcp sections"
       :terminal-lines="[
         '1. diagnostics: slow sql / locks / connection / storage',
-        '2. query: readonly sql / explain / flashback',
-        '3. taurusdb: recycle bin / masking / nonblocking ddl',
+        '2. query: readonly sql / standard explain',
+        '3. native: recycle bin / masking / flashback / enhanced explain / nonblocking ddl',
         'mode: 每页单独承载一类叙事'
       ]"
       :links="[
@@ -39,15 +39,15 @@
             to="/mcp/query"
             tag="Data Access"
             title="数据查询"
-            description="面向只读查询、执行计划解释、历史时刻回查这类访问型问题。"
-            :items="['只读查询与 explain 思路', 'Flashback Query 历史态对照', '增强 explain 的查询解释']"
+            description="面向安全只读访问和标准 explain，不混入 TaurusDB 专属能力。"
+            :items="['只读查询上下文', '标准 explain 思路', '查询结果与解释链路']"
           />
           <CategoryCard
             to="/mcp/taurusdb"
             tag="TaurusDB Native"
             title="TaurusDB 专属能力"
             description="面向差异化能力展示，不再混在数据库通用能力里。"
-            :items="['Recycle Bin 恢复与 confirmation token', 'Dynamic Masking 双视角对照', '能力探测与专属 feature matrix']"
+            :items="['Recycle Bin 恢复与 confirmation token', 'Flashback Query 历史态对照', 'Enhanced Explain 专属优化提示']"
           />
         </div>
       </div>

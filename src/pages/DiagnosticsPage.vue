@@ -3,7 +3,7 @@
     <HeroSection
       eyebrow="Ops Diagnostics"
       title="把慢、卡、堵拆成可追踪的诊断链路"
-      description="这一页只讲运维诊断问题：慢 SQL、锁竞争、连接堆积和存储压力。每个演示都保留用户输入、MCP 工具调用、流式分析和最终结论，再把截图降级为折叠证据。"
+      description="这一页只讲运维诊断问题：慢 SQL、锁竞争、连接堆积和存储压力。每个演示都保留用户输入、MCP 工具调用、流式分析和最终结论，用结构化摘要承接报告证据。"
       terminal-title="diagnostics toolchain"
       :terminal-lines="[
         'tool> find_top_slow_sql',
@@ -43,7 +43,7 @@
               <ul class="compact-list">
                 <li>`diagnose_storage_pressure` 已返回表占用、临时表和疑似 SQL 证据。</li>
                 <li>同一结果里同时出现了扫描密集 SQL 与排序/临时表负载。</li>
-                <li>这部分更适合作为运维诊断结论卡，而不是长篇截图墙。</li>
+                <li>这部分更适合作为运维诊断结论卡，而不是原始证据堆叠。</li>
               </ul>
             </article>
           </section>

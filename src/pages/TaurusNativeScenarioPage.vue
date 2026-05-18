@@ -96,7 +96,11 @@
             <h2>{{ entry.prep.demoStepTitle }}</h2>
             <p>{{ entry.prep.demoStepDescription }}</p>
           </div>
-          <ScenarioDemo :scenario="entry.scenario" hide-intro />
+          <ScenarioDemo
+            :scenario="entry.scenario"
+            hide-intro
+            :show-scenario-context="entry.slug !== 'recycle-bin-recovery'"
+          />
         </div>
 
         <section v-else class="summary-band">
