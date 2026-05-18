@@ -5,6 +5,66 @@ OpenTaurus 的公开网站仓库。
 当前仓库只承载对外站点，不承载 `MCP`、`CLI`、测试或后端实现代码。
 站点前端现已全面切换到 `Vite + Vue 3`。
 
+## TaurusDB MCP npm Usage
+
+TaurusDB MCP Server 已通过 npm 发布，站点中的 Agent 配置示例应统一使用 npm 启动入口：
+
+```json
+{
+  "command": "npx",
+  "args": ["-y", "taurusdb-mcp"]
+}
+```
+
+Claude Code 推荐命令：
+
+```bash
+claude mcp add huaweicloud-taurusdb \
+  --transport stdio \
+  -s local \
+  -e TAURUSDB_CLOUD_REGION=<your-region> \
+  -e TAURUSDB_CLOUD_ACCESS_KEY_ID=<your-ak> \
+  -e TAURUSDB_CLOUD_SECRET_ACCESS_KEY=<your-sk> \
+  -e TAURUSDB_SQL_DATABASE=<your-database> \
+  -e TAURUSDB_SQL_USER=<your-readonly-user> \
+  -e TAURUSDB_SQL_PASSWORD=<your-readonly-password> \
+  -- npx -y taurusdb-mcp
+```
+
+Codex 推荐命令：
+
+```bash
+codex mcp add huaweicloud-taurusdb \
+  --env TAURUSDB_CLOUD_REGION=<your-region> \
+  --env TAURUSDB_CLOUD_ACCESS_KEY_ID=<your-ak> \
+  --env TAURUSDB_CLOUD_SECRET_ACCESS_KEY=<your-sk> \
+  --env TAURUSDB_SQL_DATABASE=<your-database> \
+  --env TAURUSDB_SQL_USER=<your-readonly-user> \
+  --env TAURUSDB_SQL_PASSWORD=<your-readonly-password> \
+  -- npx -y taurusdb-mcp
+```
+
+Cursor 推荐配置：
+
+```json
+{
+  "mcpServers": {
+    "huaweicloud-taurusdb": {
+      "command": "npx",
+      "args": ["-y", "taurusdb-mcp"],
+      "env": {
+        "TAURUSDB_CLOUD_REGION": "<your-region>",
+        "TAURUSDB_CLOUD_ACCESS_KEY_ID": "<your-ak>",
+        "TAURUSDB_CLOUD_SECRET_ACCESS_KEY": "<your-sk>",
+        "TAURUSDB_SQL_DATABASE": "<your-database>",
+        "TAURUSDB_SQL_USER": "<your-readonly-user>",
+        "TAURUSDB_SQL_PASSWORD": "<your-readonly-password>"
+      }
+    }
+  }
+}
+```
+
 ## Structure
 
 ```text

@@ -3,12 +3,13 @@
     <HeroSection
       eyebrow="Agent Setup"
       title="接入 MCP 的完整配置教程"
-      description="如何在 Claude Code、Cursor、VS Code 里接入 TaurusDB MCP Server。这一页面向第一次配置 Agent 的用户，按真实可走通的顺序展开。"
+      description="如何在 Claude Code、Codex、Cursor 里通过 npm 接入 TaurusDB MCP Server。这一页面向第一次配置 Agent 的用户，按真实可走通的顺序展开。"
       terminal-title="mcp client config"
       :terminal-lines="[
+        'Package → npx -y taurusdb-mcp',
         'Claude Code → claude mcp add huaweicloud-taurusdb',
-        'Cursor → .cursor/mcp.json',
-        'VS Code → servers config',
+        'Codex → codex mcp add huaweicloud-taurusdb',
+        'Cursor → ~/.cursor/mcp.json',
         'adds server: huaweicloud-taurusdb'
       ]"
       :links="[
@@ -26,15 +27,15 @@
         <div class="section-head">
           <span class="mode-tag mono">Claude Code</span>
           <h2>Claude Code 接入路径</h2>
-          <p>下面是一条最短可走通的 Claude Code 接入路径，按 Build → Add MCP → Verify → Test 的顺序展开。</p>
+          <p>下面是一条最短可走通的 Claude Code 接入路径，按 npm 启动入口 → Add MCP → Verify → Test 的顺序展开。</p>
         </div>
 
         <div class="prep-steps">
-          <!-- Step 1: Build -->
+          <!-- Step 1: npm entry -->
           <div class="step-shell">
             <div class="step-head">
               <span class="mode-tag mono">Step 1</span>
-              <h3>构建 MCP Server</h3>
+              <h3>确认 npm 包可启动</h3>
             </div>
             <div class="setup-terminal-card">
               <div class="terminal-head">
@@ -47,9 +48,8 @@
               </div>
               <div class="terminal-body setup-terminal-body">
                 <div class="setup-interaction">
-                  <div class="setup-command-line mono">cd /path/to/taurus-mcp-server</div>
-                  <div class="setup-command-line mono">npm run build</div>
-                  <div class="setup-result-line mono">✓ Build complete</div>
+                  <div class="setup-command-line mono">npx -y taurusdb-mcp --version</div>
+                  <div class="setup-result-line mono">✓ taurusdb-mcp is available from npm</div>
                 </div>
               </div>
             </div>
@@ -81,7 +81,7 @@
                   <div class="setup-command-line mono">  -e TAURUSDB_SQL_DATABASE=&lt;your-database&gt; \</div>
                   <div class="setup-command-line mono">  -e TAURUSDB_SQL_USER=&lt;your-readonly-user&gt; \</div>
                   <div class="setup-command-line mono">  -e TAURUSDB_SQL_PASSWORD=&lt;your-readonly-password&gt; \</div>
-                  <div class="setup-command-line mono">  -- node /path/to/taurus-mcp-server/packages/mcp/dist/index.js</div>
+                  <div class="setup-command-line mono">  -- npx -y taurusdb-mcp</div>
                   <div class="setup-result-line mono">✓ MCP server registered</div>
                 </div>
               </div>
@@ -109,7 +109,8 @@
                   <div class="setup-command-line mono">claude mcp list</div>
                   <div class="setup-result-line mono">huaweicloud-taurusdb</div>
                   <div class="setup-command-line mono">claude mcp get huaweicloud-taurusdb</div>
-                  <div class="setup-result-line mono">command: node /path/to/mcp/dist/index.js</div>
+                  <div class="setup-result-line mono">command: npx</div>
+                  <div class="setup-result-line mono">args: -y taurusdb-mcp</div>
                   <div class="setup-result-line mono">env: TAURUSDB_CLOUD_REGION=...</div>
                 </div>
               </div>
@@ -192,9 +193,9 @@
     <section class="band section-anchor" id="others">
       <div class="section-inner">
         <div class="section-head">
-          <span class="mode-tag mono">Cursor & VS Code</span>
+          <span class="mode-tag mono">Codex & Cursor</span>
           <h2>其他客户端接入</h2>
-          <p>Cursor 和 VS Code 使用不同的 MCP 配置结构，点击下方卡片查看完整配置步骤。</p>
+          <p>Codex 和 Cursor 使用不同的 MCP 配置结构，点击下方卡片查看完整配置步骤。</p>
         </div>
 
         <div class="triptych">
@@ -214,9 +215,9 @@
             <h3>手动配置</h3>
             <p>如果你的客户端不在上述列表中，可以手动复制配置结构并调整配置文件位置。</p>
             <ul class="compact-list">
-              <li>Cursor: `.cursor/mcp.json` 使用 `mcpServers`</li>
-              <li>VS Code: 使用 `servers` 配置结构</li>
-              <li>确认 `command` 指向正确的 MCP 入口</li>
+              <li>Codex: `~/.codex/config.toml` 使用 `mcp_servers`</li>
+              <li>Cursor: `~/.cursor/mcp.json` 使用 `mcpServers`</li>
+              <li>确认 `command` 为 `npx`，`args` 为 `-y taurusdb-mcp`</li>
             </ul>
           </article>
         </div>
@@ -292,7 +293,7 @@
                 <div class="setup-command-line mono">  -e TAURUSDB_SQL_DATABASE=&lt;your-database&gt; \</div>
                 <div class="setup-command-line mono">  -e TAURUSDB_SQL_USER=&lt;your-readonly-user&gt; \</div>
                 <div class="setup-command-line mono">  -e TAURUSDB_SQL_PASSWORD=&lt;your-readonly-password&gt; \</div>
-                <div class="setup-command-line mono">  -- node /path/to/mcp/dist/index.js</div>
+                <div class="setup-command-line mono">  -- npx -y taurusdb-mcp</div>
                 <div class="setup-result-line mono">✓ MCP config updated with env</div>
               </div>
             </div>

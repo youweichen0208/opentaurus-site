@@ -5,36 +5,28 @@ export const agentSetupPages = [
     navTitle: "Cursor 配置教程",
     title: "Cursor 接入 MCP 的完整流程",
     description:
-      "Cursor 使用 mcpServers 配置结构，手动编辑 .cursor/mcp.json。这一页展示完整配置步骤。",
+      "Cursor 使用 mcpServers 配置结构，手动编辑 ~/.cursor/mcp.json。这一页展示通过 npm 包启动 MCP 的完整配置步骤。",
     links: [
       { label: "返回 Agent Setup", to: "/agents" },
-      { label: "VS Code 配置", to: "/agents/vscode" },
+      { label: "Codex 配置", to: "/agents/codex" },
       { label: "Claude Code 配置", to: "/agents#claude" },
     ],
     prep: {
       overviewTitle: "Cursor MCP Server 配置",
       flowIntro:
-        "下面按真实执行顺序展开：先构建 MCP Server，再手动编辑配置文件，最后验证连通性。",
+        "下面按真实执行顺序展开：先确认 npm 包可启动，再手动编辑配置文件，最后验证连通性。",
       steps: [
         {
-          title: "1. 构建 MCP Server",
-          terminalTitle: "build mcp server",
+          title: "1. 确认 npm 包可启动",
+          terminalTitle: "npm package",
           interactions: [
             {
               commandLines: [
-                "$ cd /path/to/taurus-mcp-server",
+                "$ npx -y taurusdb-mcp --version",
               ],
               resultLines: [
-                "进入 MCP Server 项目目录",
-              ],
-            },
-            {
-              commandLines: [
-                "$ npm run build",
-              ],
-              resultLines: [
-                "✓ Build complete",
-                "MCP Server 已构建完成，dist/index.js 是入口文件",
+                "✓ taurusdb-mcp is available from npm",
+                "Cursor 配置中会通过 npx 拉起这个 MCP Server",
               ],
             },
           ],
@@ -45,7 +37,7 @@ export const agentSetupPages = [
           interactions: [
             {
               commandLines: [
-                "# 在项目根目录创建 .cursor/mcp.json",
+                "# 创建或编辑 ~/.cursor/mcp.json",
               ],
               resultLines: [
                 "Cursor 使用 mcpServers 配置结构",
@@ -56,20 +48,23 @@ export const agentSetupPages = [
                 "{",
                 "  \"mcpServers\": {",
                 "    \"huaweicloud-taurusdb\": {",
-                "      \"command\": \"node\",",
-                "      \"args\": [\"/path/to/mcp/dist/index.js\"],",
+                "      \"command\": \"npx\",",
+                "      \"args\": [\"-y\", \"taurusdb-mcp\"],",
                 "      \"env\": {",
                 "        \"TAURUSDB_CLOUD_REGION\": \"<your-region>\",",
                 "        \"TAURUSDB_CLOUD_ACCESS_KEY_ID\": \"<your-ak>\",",
-                "        \"TAURUSDB_CLOUD_SECRET_ACCESS_KEY\": \"<your-sk>\"",
+                "        \"TAURUSDB_CLOUD_SECRET_ACCESS_KEY\": \"<your-sk>\",",
+                "        \"TAURUSDB_SQL_DATABASE\": \"<your-database>\",",
+                "        \"TAURUSDB_SQL_USER\": \"<your-readonly-user>\",",
+                "        \"TAURUSDB_SQL_PASSWORD\": \"<your-readonly-password>\"",
                 "      }",
                 "    }",
                 "  }",
                 "}",
               ],
               resultLines: [
-                "把 region + AK/SK 写进 env 字段",
-                "args 指向 MCP Server 的入口文件",
+                "把云控制面和只读数据面配置写进 env 字段",
+                "command 使用 npx，args 使用已发布的 taurusdb-mcp 包",
               ],
             },
           ],
@@ -119,110 +114,114 @@ export const agentSetupPages = [
     },
   },
   {
-    slug: "vscode",
-    tag: "VS Code Setup",
-    navTitle: "VS Code 配置教程",
-    title: "VS Code 接入 MCP 的完整流程",
+    slug: "codex",
+    tag: "Codex Setup",
+    navTitle: "Codex 配置教程",
+    title: "Codex 接入 MCP 的完整流程",
     description:
-      "VS Code 使用 servers 配置结构，手动编辑 MCP 配置。这一页展示完整配置步骤。",
+      "Codex 使用 ~/.codex/config.toml 中的 mcp_servers 配置结构，也可以通过 codex mcp add 命令写入配置。",
     links: [
       { label: "返回 Agent Setup", to: "/agents" },
       { label: "Cursor 配置", to: "/agents/cursor" },
       { label: "Claude Code 配置", to: "/agents#claude" },
     ],
     prep: {
-      overviewTitle: "VS Code MCP Server 配置",
+      overviewTitle: "Codex MCP Server 配置",
       flowIntro:
-        "下面按真实执行顺序展开：先构建 MCP Server，再手动编辑配置文件，最后验证连通性。",
+        "下面按真实执行顺序展开：先确认 npm 包可启动，再通过 Codex CLI 添加 MCP Server，最后验证连通性。",
       steps: [
         {
-          title: "1. 构建 MCP Server",
-          terminalTitle: "build mcp server",
+          title: "1. 确认 npm 包可启动",
+          terminalTitle: "npm package",
           interactions: [
             {
               commandLines: [
-                "$ cd /path/to/taurus-mcp-server",
+                "$ npx -y taurusdb-mcp --version",
               ],
               resultLines: [
-                "进入 MCP Server 项目目录",
-              ],
-            },
-            {
-              commandLines: [
-                "$ npm run build",
-              ],
-              resultLines: [
-                "✓ Build complete",
-                "MCP Server 已构建完成，dist/index.js 是入口文件",
+                "✓ taurusdb-mcp is available from npm",
+                "Codex 配置中会通过 npx 拉起这个 MCP Server",
               ],
             },
           ],
         },
         {
-          title: "2. 编辑 VS Code MCP 配置",
-          terminalTitle: "vscode mcp config",
+          title: "2. 通过 Codex CLI 添加 MCP Server",
+          terminalTitle: "codex mcp add",
           interactions: [
             {
               commandLines: [
-                "# VS Code MCP 配置位置：~/.vscode/mcp.json",
+                "$ codex mcp add huaweicloud-taurusdb \\",
+                "  --env TAURUSDB_CLOUD_REGION=<your-region> \\",
+                "  --env TAURUSDB_CLOUD_ACCESS_KEY_ID=<your-ak> \\",
+                "  --env TAURUSDB_CLOUD_SECRET_ACCESS_KEY=<your-sk> \\",
+                "  --env TAURUSDB_SQL_DATABASE=<your-database> \\",
+                "  --env TAURUSDB_SQL_USER=<your-readonly-user> \\",
+                "  --env TAURUSDB_SQL_PASSWORD=<your-readonly-password> \\",
+                "  -- npx -y taurusdb-mcp",
               ],
               resultLines: [
-                "VS Code 使用 servers 配置结构",
+                "✓ MCP server registered in ~/.codex/config.toml",
+                "Codex CLI 和 Codex IDE extension 会读取同一份配置",
               ],
             },
+          ],
+        },
+        {
+          title: "3. 等价的 ~/.codex/config.toml",
+          terminalTitle: "codex config",
+          interactions: [
             {
               commandLines: [
-                "{",
-                "  \"servers\": {",
-                "    \"huaweicloud-taurusdb\": {",
-                "      \"command\": \"node\",",
-                "      \"args\": [\"/path/to/mcp/dist/index.js\"],",
-                "      \"env\": {",
-                "        \"TAURUSDB_CLOUD_REGION\": \"<your-region>\",",
-                "        \"TAURUSDB_CLOUD_ACCESS_KEY_ID\": \"<your-ak>\",",
-                "        \"TAURUSDB_CLOUD_SECRET_ACCESS_KEY\": \"<your-sk>\"",
-                "      }",
-                "    }",
-                "  }",
-                "}",
+                "[mcp_servers.huaweicloud-taurusdb]",
+                "command = \"npx\"",
+                "args = [\"-y\", \"taurusdb-mcp\"]",
+                "enabled = true",
+                "",
+                "[mcp_servers.huaweicloud-taurusdb.env]",
+                "TAURUSDB_CLOUD_REGION = \"<your-region>\"",
+                "TAURUSDB_CLOUD_ACCESS_KEY_ID = \"<your-ak>\"",
+                "TAURUSDB_CLOUD_SECRET_ACCESS_KEY = \"<your-sk>\"",
+                "TAURUSDB_SQL_DATABASE = \"<your-database>\"",
+                "TAURUSDB_SQL_USER = \"<your-readonly-user>\"",
+                "TAURUSDB_SQL_PASSWORD = \"<your-readonly-password>\"",
               ],
               resultLines: [
-                "把 region + AK/SK 写进 env 字段",
-                "args 指向 MCP Server 的入口文件",
+                "手动配置时使用 mcp_servers.<server-name>",
+                "临时凭证需要再补 TAURUSDB_CLOUD_SECURITY_TOKEN",
               ],
               table: {
                 headers: ["client", "config location", "structure"],
                 rows: [
-                  ["VS Code", "~/.vscode/mcp.json", "servers"],
-                  ["Cursor", ".cursor/mcp.json", "mcpServers"],
+                  ["Codex", "~/.codex/config.toml", "mcp_servers"],
+                  ["Cursor", "~/.cursor/mcp.json", "mcpServers"],
                 ],
               },
             },
           ],
         },
         {
-          title: "3. 重启 VS Code 使配置生效",
-          terminalTitle: "reload vscode",
+          title: "4. 验证 Codex MCP 配置",
+          terminalTitle: "verify codex mcp",
           interactions: [
             {
               commandLines: [
-                "# 重启 VS Code 使配置生效",
+                "$ codex mcp list",
               ],
               resultLines: [
-                "关闭并重新打开 VS Code",
-                "或使用 Developer: Reload Window",
+                "huaweicloud-taurusdb",
+                "如果在 IDE extension 中使用 Codex，重启窗口后再验证工具是否出现",
               ],
             },
           ],
         },
         {
-          title: "4. 验证 MCP 连通",
-          terminalTitle: "verify vscode mcp",
+          title: "5. 验证 MCP 连通",
+          terminalTitle: "call mcp tools",
           interactions: [
             {
               commandLines: [
-                "在 VS Code 里打开 Copilot Chat",
-                "切换到 Agent 模式",
+                "在 Codex 里打开一个会话",
                 "输入: list_cloud_taurus_instances",
               ],
               resultLines: [

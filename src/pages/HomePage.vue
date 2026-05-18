@@ -3,11 +3,12 @@
     <HeroSection
       eyebrow="OpenTaurus for TaurusDB"
       title="MCP 工具面 + Agent 接入配置"
-      description="为 Claude、Cursor、VS Code 提供 TaurusDB 专属工具面，把云实例诊断、Recycle Bin、Dynamic Masking 等能力接入 Agent 对话流。"
+      description="为 Claude Code、Codex、Cursor 提供 TaurusDB 专属工具面，把云实例诊断、Recycle Bin、Dynamic Masking 等能力接入 Agent 对话流。"
       terminal-title="taurusdb surfaces"
       :terminal-lines="[
         'MCP → diagnostics / flashback / recycle-bin / masking',
-        'Agent → claude / cursor / vscode config'
+        'Agent → claude / codex / cursor config',
+        'Package → npx -y taurusdb-mcp'
       ]"
       :links="[
         { label: '看 MCP 能力', to: '/mcp' },
@@ -34,7 +35,7 @@
           <RouterLink class="card card-link nav-card" to="/agents">
             <span class="mode-tag mono">Agent Setup</span>
             <h3>Agent 接入配置</h3>
-            <p>Claude Code、Cursor、VS Code 的 MCP 接入步骤，一次性把 region + AK/SK 写进配置。</p>
+            <p>Claude Code、Codex、Cursor 的 MCP 接入步骤，一次性把 region + AK/SK 写进配置。</p>
           </RouterLink>
         </div>
       </div>
