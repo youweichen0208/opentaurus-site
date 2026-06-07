@@ -33,6 +33,8 @@ import { RouterLink } from "vue-router";
 
 const navItems = [
   { id: "quickstart", href: "#quickstart", label: "快速开始" },
+  { id: "security", href: "#security", label: "安全架构" },
+  { id: "instances", href: "#instances", label: "实例发现" },
   { id: "diagnostics", href: "#diagnostics", label: "运维诊断" },
   { id: "query", href: "#query", label: "数据查询" },
   { id: "taurusdb", href: "#taurusdb", label: "专属能力" },

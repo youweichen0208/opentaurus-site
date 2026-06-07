@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: #09090b;
+    color: #fafafa;
+    font-family: Inter, -apple-system, "PingFang SC", "Noto Sans SC", sans-serif;
+    line-height: 1.6;
+    padding: 40px;
+  }
+  h2 { font-size: 1.5rem; margin-bottom: 8px; letter-spacing: -0.03em; }
+  .subtitle { color: rgba(255,255,255,0.45); margin-bottom: 32px; font-size: 0.95rem; }
+
+  .bg-comparison {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+  .bg-card {
+    border-radius: 16px;
+    border: 2px solid rgba(255,255,255,0.06);
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.2s ease, border-color 0.2s ease;
+  }
+  .bg-card:hover {
+    transform: translateY(-2px);
+    border-color: rgba(255,255,255,0.15);
+  }
+  .bg-card.selected {
+    border-color: #f97316;
+    box-shadow: 0 0 0 2px rgba(249,115,22,0.3);
+  }
+
+  .bg-preview {
+    height: 200px;
+    padding: 28px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: relative;
+    overflow: hidden;
+  }
+  .bg-preview .glow {
+    position: absolute;
+    top: -60px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 200px;
+    height: 200px;
+    background: radial-gradient(circle, rgba(249,115,22,0.1), transparent 70%);
+    pointer-events: none;
+  }
+  .bg-preview .mock-title {
+    font-size: 1.5rem;
+    font-weight: 800;
+    letter-spacing: -0.04em;
+    line-height: 1.1;
+    position: relative;
+  }
+  .bg-preview .mock-desc {
+    font-size: 0.82rem;
+    line-height: 1.5;
+    position: relative;
+    max-width: 85%;
+    opacity: 0.6;
+  }
+  .bg-preview .mock-btn {
+    display: inline-flex;
+    padding: 6px 14px;
+    border-radius: 8px;
+    background: #f97316;
+    color: #fff;
+    font-weight: 700;
+    font-size: 0.78rem;
+    width: fit-content;
+    position: relative;
+  }
+
+  .bg-info {
+    padding: 16px 18px;
+    background: rgba(255,255,255,0.03);
+  }
+  .bg-info .label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 6px;
+  }
+  .bg-info .letter {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px;
+    height: 22px;
+    border-radius: 6px;
+    background: rgba(255,255,255,0.08);
+    color: rgba(255,255,255,0.6);
+    font-size: 0.72rem;
+    font-weight: 700;
+  }
+  .bg-info .name {
+    font-weight: 700;
+    font-size: 0.92rem;
+  }
+  .bg-info .desc {
+    color: rgba(255,255,255,0.4);
+    font-size: 0.82rem;
+    line-height: 1.5;
+  }
+</style>
+</head>
+<body>
+
+<h2>背景色系选择</h2>
+<p class="subtitle">不同色系的深色背景，点击选择最合适的</p>
+
+<div class="bg-comparison">
+  <div class="bg-card" data-choice="a" onclick="toggleSelect(this)">
+    <div class="bg-preview" style="background: linear-gradient(180deg, #1a1625, #0f0c1a);">
+      <div class="glow" style="background: radial-gradient(circle, rgba(168,85,247,0.12), transparent 70%);"></div>
+      <div class="mock-title">OpenTaurus</div>
+      <div class="mock-desc">让 AI Agent 直接操控 TaurusDB</div>
+      <div class="mock-btn">快速开始 →</div>
+    </div>
+    <div class="bg-info">
+      <div class="label"><div class="letter">A</div><div class="name">深紫 #140f22</div></div>
+      <div class="desc">偏紫色调，高级感强。类似 Supabase / Framer 风格。橙色按钮在紫色背景上非常突出。</div>
+    </div>
+  </div>
+
+  <div class="bg-card" data-choice="b" onclick="toggleSelect(this)">
+    <div class="bg-preview" style="background: linear-gradient(180deg, #0f1a2e, #0b1624);">
+      <div class="glow" style="background: radial-gradient(circle, rgba(59,130,246,0.12), transparent 70%);"></div>
+      <div class="mock-title">OpenTaurus</div>
+      <div class="mock-desc">让 AI Agent 直接操控 TaurusDB</div>
+      <div class="mock-btn">快速开始 →</div>
+    </div>
+    <div class="bg-info">
+      <div class="label"><div class="letter">B</div><div class="name">深蓝 #0d1829</div></div>
+      <div class="desc">偏蓝色调，科技感强，沉稳专业。类似 Stripe / AWS Console 风格。</div>
+    </div>
+  </div>
+
+  <div class="bg-card" data-choice="c" onclick="toggleSelect(this)">
+    <div class="bg-preview" style="background: linear-gradient(180deg, #1f1208, #150d05);">
+      <div class="glow" style="background: radial-gradient(circle, rgba(249,115,22,0.15), transparent 70%);"></div>
+      <div class="mock-title">OpenTaurus</div>
+      <div class="mock-desc">让 AI Agent 直接操控 TaurusDB</div>
+      <div class="mock-btn">快速开始 →</div>
+    </div>
+    <div class="bg-info">
+      <div class="label"><div class="letter">C</div><div class="name">暖黑 #170e05</div></div>
+      <div class="desc">偏棕/暖色调，和品牌橙色浑然一体。温暖有质感，独特辨识度高。</div>
+    </div>
+  </div>
+
+  <div class="bg-card" data-choice="d" onclick="toggleSelect(this)">
+    <div class="bg-preview" style="background: linear-gradient(180deg, #0f1a14, #0b1510);">
+      <div class="glow" style="background: radial-gradient(circle, rgba(34,197,94,0.1), transparent 70%);"></div>
+      <div class="mock-title">OpenTaurus</div>
+      <div class="mock-desc">让 AI Agent 直接操控 TaurusDB</div>
+      <div class="mock-btn">快速开始 →</div>
+    </div>
+    <div class="bg-info">
+      <div class="label"><div class="letter">D</div><div class="name">深绿 #0c1611</div></div>
+      <div class="desc">偏绿色调，自然稳重。适合数据库/基础设施产品，和成功状态色呼应。</div>
+    </div>
+  </div>
+</div>
+
+<script>
+  function toggleSelect(el) {
+    document.querySelectorAll('.bg-card').forEach(c => c.classList.remove('selected'));
+    el.classList.add('selected');
+  }
+</script>
+
+</body>
+</html>

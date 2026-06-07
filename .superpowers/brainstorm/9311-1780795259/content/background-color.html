@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: #09090b;
+    color: #fafafa;
+    font-family: Inter, -apple-system, "PingFang SC", "Noto Sans SC", sans-serif;
+    line-height: 1.6;
+    padding: 40px;
+  }
+  h2 { font-size: 1.5rem; margin-bottom: 8px; letter-spacing: -0.03em; }
+  .subtitle { color: rgba(255,255,255,0.45); margin-bottom: 32px; font-size: 0.95rem; }
+
+  .bg-comparison {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+  .bg-card {
+    border-radius: 16px;
+    border: 1px solid rgba(255,255,255,0.08);
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  .bg-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 16px 48px rgba(0,0,0,0.3);
+  }
+  .bg-card.selected {
+    border-color: #f97316;
+    box-shadow: 0 0 0 2px rgba(249,115,22,0.3);
+  }
+
+  .bg-preview {
+    height: 220px;
+    padding: 28px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: relative;
+    overflow: hidden;
+  }
+  .bg-preview .glow {
+    position: absolute;
+    top: -60px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 200px;
+    height: 200px;
+    background: radial-gradient(circle, rgba(249,115,22,0.1), transparent 70%);
+    pointer-events: none;
+  }
+  .bg-preview .mock-title {
+    font-size: 1.6rem;
+    font-weight: 800;
+    letter-spacing: -0.04em;
+    line-height: 1.1;
+    position: relative;
+  }
+  .bg-preview .mock-desc {
+    font-size: 0.82rem;
+    line-height: 1.5;
+    position: relative;
+    max-width: 85%;
+  }
+  .bg-preview .mock-btn {
+    display: inline-flex;
+    padding: 6px 14px;
+    border-radius: 8px;
+    background: #f97316;
+    color: #fff;
+    font-weight: 700;
+    font-size: 0.78rem;
+    width: fit-content;
+    position: relative;
+    box-shadow: 0 0 16px rgba(249,115,22,0.2);
+  }
+  .bg-preview .mock-terminal {
+    margin-top: auto;
+    padding: 10px 12px;
+    border-radius: 8px;
+    background: rgba(0,0,0,0.3);
+    border: 1px solid rgba(255,255,255,0.06);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    color: rgba(255,255,255,0.6);
+    position: relative;
+  }
+
+  .bg-info {
+    padding: 16px 18px;
+    background: rgba(255,255,255,0.03);
+  }
+  .bg-info .label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 6px;
+  }
+  .bg-info .letter {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px;
+    height: 22px;
+    border-radius: 6px;
+    background: rgba(255,255,255,0.08);
+    color: rgba(255,255,255,0.6);
+    font-size: 0.72rem;
+    font-weight: 700;
+  }
+  .bg-info .name {
+    font-weight: 700;
+    font-size: 0.92rem;
+  }
+  .bg-info .hex {
+    color: rgba(255,255,255,0.35);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.78rem;
+    margin-bottom: 6px;
+  }
+  .bg-info .desc {
+    color: rgba(255,255,255,0.45);
+    font-size: 0.82rem;
+    line-height: 1.5;
+  }
+</style>
+</head>
+<body>
+
+<h2>背景色深浅对比</h2>
+<p class="subtitle">从左到右由深到浅，点击选择你喜欢的层次</p>
+
+<div class="bg-comparison">
+  <div class="bg-card" data-choice="a" onclick="toggleSelect(this)">
+    <div class="bg-preview" style="background: #111113;">
+      <div class="glow"></div>
+      <div class="mock-title">OpenTaurus</div>
+      <div class="mock-desc">让 AI Agent 直接操控 TaurusDB</div>
+      <div class="mock-btn">快速开始 →</div>
+    </div>
+    <div class="bg-info">
+      <div class="label"><div class="letter">A</div><div class="name">深灰 #111113</div></div>
+      <div class="hex">background: #111113</div>
+      <div class="desc">比纯黑稍亮，保持暗色氛围但更柔和。Linear / Raycast 风格。</div>
+    </div>
+  </div>
+
+  <div class="bg-card" data-choice="b" onclick="toggleSelect(this)">
+    <div class="bg-preview" style="background: #18181B;">
+      <div class="glow"></div>
+      <div class="mock-title">OpenTaurus</div>
+      <div class="mock-desc">让 AI Agent 直接操控 TaurusDB</div>
+      <div class="mock-btn">快速开始 →</div>
+    </div>
+    <div class="bg-info">
+      <div class="label"><div class="letter">B</div><div class="name">Zinc Dark #18181b</div></div>
+      <div class="hex">background: #18181b</div>
+      <div class="desc">Tailwind zinc-900，标准深色主题。Vercel / GitHub 常用。</div>
+    </div>
+  </div>
+
+  <div class="bg-card" data-choice="c" onclick="toggleSelect(this)">
+    <div class="bg-preview" style="background: #1e1e24;">
+      <div class="glow"></div>
+      <div class="mock-title">OpenTaurus</div>
+      <div class="mock-desc">让 AI Agent 直接操控 TaurusDB</div>
+      <div class="mock-btn">快速开始 →</div>
+    </div>
+    <div class="bg-info">
+      <div class="label"><div class="letter">C</div><div class="name">暖深灰 #1e1e24</div></div>
+      <div class="hex">background: #1e1e24</div>
+      <div class="desc">带一点暖色调的深色，更明亮，读起来更舒适。偏 VSCode Dark+。</div>
+    </div>
+  </div>
+</div>
+
+<script>
+  function toggleSelect(el) {
+    document.querySelectorAll('.bg-card').forEach(c => c.classList.remove('selected'));
+    el.classList.add('selected');
+    const choice = el.getAttribute('data-choice');
+    const evt = { type: 'click', choice, text: el.querySelector('.name').textContent, timestamp: Math.floor(Date.now()/1000) };
+    try {
+      const ws = new WebSocket(`ws://${location.host}/ws`);
+      ws.onopen = () => { ws.send(JSON.stringify(evt)); ws.close(); };
+    } catch(e) {}
+  }
+</script>
+
+</body>
+</html>
