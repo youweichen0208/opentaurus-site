@@ -1,28 +1,35 @@
 import { createRouter, createWebHistory } from "vue-router";
 import HomePage from "../pages/HomePage.vue";
-import McpOverviewPage from "../pages/McpOverviewPage.vue";
-import DiagnosticsPage from "../pages/DiagnosticsPage.vue";
-import QueryPage from "../pages/QueryPage.vue";
-import TaurusNativePage from "../pages/TaurusNativePage.vue";
-import TaurusNativeScenarioPage from "../pages/TaurusNativeScenarioPage.vue";
-import AgentsPage from "../pages/AgentsPage.vue";
-import AgentSetupPage from "../pages/AgentSetupPage.vue";
+
+const legacyRedirects = {
+  "/mcp": "#hero",
+  "/mcp/diagnostics": "#diagnostics",
+  "/mcp/query": "#query",
+  "/mcp/taurusdb": "#taurusdb",
+  "/agents": "#agents",
+};
 
 const routes = [
   { path: "/", component: HomePage },
-  { path: "/mcp", component: McpOverviewPage },
-  { path: "/mcp/diagnostics", component: DiagnosticsPage },
-  { path: "/mcp/query", component: QueryPage },
-  { path: "/mcp/taurusdb", component: TaurusNativePage },
-  { path: "/mcp/taurusdb/:slug", component: TaurusNativeScenarioPage },
-  { path: "/agents", component: AgentsPage },
-  { path: "/agents/:slug", component: AgentSetupPage },
+  {
+    path: "/:pathMatch(.*)*",
+    beforeEnter(to) {
+      const anchor = legacyRedirects[to.path];
+      if (anchor) {
+        return { path: "/", hash: anchor, replace: true };
+      }
+      return { path: "/", replace: true };
+    },
+    component: HomePage,
+  },
 ];
 
 export default createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes,
-  scrollBehavior() {
+  scrollBehavior(to, from, savedPosition) {
+    if (savedPosition) return savedPosition;
+    if (to.hash) return { el: to.hash, behavior: "smooth", top: 72 };
     return { top: 0 };
   },
 });
