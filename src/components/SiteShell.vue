@@ -28,7 +28,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onBeforeUnmount } from "vue";
+import { ref, onMounted, onBeforeUnmount, nextTick } from "vue";
 import { RouterLink } from "vue-router";
 
 const navItems = [
@@ -48,7 +48,13 @@ function scrollTo(id) {
   if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
 }
 
-onMounted(() => {
+let revealObserver = null;
+
+onMounted(async () => {
+  await nextTick();
+  await nextTick();
+  await new Promise((r) => setTimeout(r, 50));
+
   const ids = navItems.filter((n) => !n.external).map((n) => n.id);
   observer = new IntersectionObserver(
     (entries) => {
@@ -65,23 +71,24 @@ onMounted(() => {
     if (el) observer.observe(el);
   });
 
+  revealObserver = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((e) => {
+        if (e.isIntersecting) {
+          e.target.classList.add("is-visible");
+          revealObserver.unobserve(e.target);
+        }
+      });
+    },
+    { threshold: 0.08 }
+  );
   document.querySelectorAll(".reveal").forEach((el) => {
-    const revealObs = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((e) => {
-          if (e.isIntersecting) {
-            e.target.classList.add("is-visible");
-            revealObs.unobserve(e.target);
-          }
-        });
-      },
-      { threshold: 0.08 }
-    );
-    revealObs.observe(el);
+    revealObserver.observe(el);
   });
 });
 
 onBeforeUnmount(() => {
   if (observer) observer.disconnect();
+  if (revealObserver) revealObserver.disconnect();
 });
 </script>
