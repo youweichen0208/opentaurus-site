@@ -44,22 +44,21 @@ export const taurusScenarios = [
     ],
   },
   {
-    id: "ddl",
-    label: "Nonblocking DDL",
-    tagline: "在线加列不阻断读流量",
+    id: "flashback",
+    label: "Flashback Query",
+    tagline: "按时间点回查历史态数据",
     steps: [
-      { type: "chat", user: "帮我做 online schema 变更，加个 remark 字段" },
-      { type: "tool", name: "execute_ddl", args: '(sql: "ALTER TABLE t_nonblocking_ddl_test ADD COLUMN remark VARCHAR(128)")' },
-      { type: "result", label: "DDL 执行结果", lines: [
-        'DDL 执行中...',
-        '✔ schema 变更成功',
+      { type: "chat", user: "订单 1 的状态刚才被人改错了，帮我看更新前是什么值" },
+      { type: "tool", name: "flashback_query", args: '({ table: "t_flashback_query_test", id: 1, at: "2026-05-13 11:04:39" })' },
+      { type: "result", label: "回查结果", lines: [
+        '✔ 表已开启 BACKQUERY=1，支持回查',
+        '时间点 T1 = 2026-05-13 11:04:39',
       ]},
-      { type: "chat", agent: "DDL 期间并发查询是否正常返回？" },
-      { type: "tool", name: "execute_readonly_sql", args: '(sql: "SELECT id, sku, inventory FROM t_nonblocking_ddl_test")' },
-      { type: "result", label: "并发查询结果", lines: [
-        '✔ 2 rows in set',
-        'DDL 期间未出现读流量阻塞',
+      { type: "result", label: "历史态 vs 当前态", lines: [
+        '时间点 T1  status = draft',
+        '当前态      status = published',
       ], success: true },
+      { type: "chat", agent: "订单 1 在 T1 时刻 status 是 draft，之后被 UPDATE 为 published。如需要恢复历史态，需要应用侧执行 UPDATE（Agent 只读）。" },
     ],
   },
   {
