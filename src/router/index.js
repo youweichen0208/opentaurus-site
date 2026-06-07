@@ -7,7 +7,6 @@ const legacyRedirects = {
   "/mcp/query": "#query",
   "/mcp/taurusdb": "#taurusdb",
   "/agents": "#agents",
-  "/security": "#security",
   "/instances": "#instances",
 };
 

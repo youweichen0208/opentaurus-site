@@ -33,7 +33,6 @@ import { RouterLink } from "vue-router";
 
 const navItems = [
   { id: "quickstart", href: "#quickstart", label: "快速开始" },
-  { id: "security", href: "#security", label: "安全架构" },
   { id: "instances", href: "#instances", label: "实例发现" },
   { id: "diagnostics", href: "#diagnostics", label: "运维诊断" },
   { id: "locks", href: "#locks", label: "锁竞争" },

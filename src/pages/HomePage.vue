@@ -9,44 +9,6 @@
     <div class="divider"></div>
 
     <DemoSection
-      anchor="security"
-      tag="安全架构"
-      title="凭证安全<br />零泄露设计"
-      description="AK/SK 和数据库密码全部通过环境变量传入 MCP Server 独立进程，从不进入 Agent 对话、从不写入日志、从不暴露在代码里。"
-      :features="[
-        '环境变量隔离：MCP Server 独立进程持有凭证',
-        'Agent 对话中永远不会出现 AK/SK 或密码',
-        '不会意外提交到 Git、不会记录在聊天记录',
-        '只读账号 + 受限工具面，最小权限原则',
-      ]"
-    >
-      <template #terminal>
-        <AnimatedTerminal agentTitle="安全配置 · env 隔离">
-          <div class="anim-msg anim-msg-1 term-dim" style="font-size: 0.74rem; letter-spacing: 0.05em; text-transform: uppercase; color: var(--brand);">✘ 不安全：把密码写在聊天或代码里</div>
-          <div class="anim-msg anim-msg-2" style="padding: 8px 12px; border-radius: 8px; background: rgba(239,68,68,0.08); border: 1px solid rgba(239,68,68,0.2); color: rgba(239,68,68,0.8); font-size: 0.8rem; line-height: 1.6;">
-            <span style="font-family: 'JetBrains Mono', monospace;">password = "S3cret@2026"</span><br />
-            <span class="term-dim" style="font-size: 0.72rem;">→ 会出现在聊天记录、日志、Git 历史</span>
-          </div>
-          <div class="anim-msg anim-msg-3 term-dim" style="font-size: 0.74rem; letter-spacing: 0.05em; text-transform: uppercase; color: var(--success);">✔ 安全：凭证只在 MCP Server env 里</div>
-          <div class="anim-msg anim-msg-4" style="padding: 10px 14px; border-radius: 8px; background: var(--success-bg); border: 1px solid rgba(34,197,94,0.18); font-size: 0.78rem; line-height: 1.75; font-family: 'JetBrains Mono', monospace;">
-            <div style="color: var(--success); font-family: Inter, sans-serif; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 6px;">MCP Server env 字段</div>
-            <div><span class="term-info">TAURUSDB_CLOUD_ACCESS_KEY_ID</span> = <span class="term-warn">&lt;your-ak&gt;</span></div>
-            <div><span class="term-info">TAURUSDB_CLOUD_SECRET_ACCESS_KEY</span> = <span class="term-warn">&lt;your-sk&gt;</span></div>
-            <div><span class="term-info">TAURUSDB_SQL_USER</span> = <span class="term-warn">&lt;readonly-user&gt;</span></div>
-            <div><span class="term-info">TAURUSDB_SQL_PASSWORD</span> = <span class="term-warn">&lt;readonly-password&gt;</span></div>
-          </div>
-          <div class="anim-msg anim-msg-5 chat-row chat-row-agent">
-            <div class="chat-bubble" style="font-size: 0.82rem;">
-              Agent 只能调用工具，<strong style="color:#22c55e">永远看不到</strong>这些值
-            </div>
-          </div>
-        </AnimatedTerminal>
-      </template>
-    </DemoSection>
-
-    <div class="divider"></div>
-
-    <DemoSection
       anchor="instances"
       tag="实例发现"
       title="一句话列出<br />你的云实例"
