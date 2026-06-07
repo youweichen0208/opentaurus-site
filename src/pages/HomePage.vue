@@ -88,39 +88,103 @@
 
     <div class="divider"></div>
 
+    <!-- 运维诊断：报告 3.1 + 3.2，详细根因分析 -->
     <DemoSection
       anchor="diagnostics"
       tag="运维诊断"
-      title="一句话诊断<br />数据库异常"
-      description="让 AI Agent 自动分析慢查询、锁等待、资源瓶颈，直接给出根因和优化建议。"
+      title="一句话诊断<br />慢查询根因"
+      description="从模糊匹配到无索引排序，AI 自动识别慢 SQL、分析执行计划，给出可直接落地的索引和分页模式建议。"
       :features="[
-        '慢查询分析与索引优化建议',
-        '锁等待与死锁检测，定位 blocker',
-        '实例资源使用趋势监控',
-        '参数配置自动巡检',
+        '扫描 digest 库，定位最可疑 SQL',
+        '拆解执行计划：模糊匹配 / 排序 / OFFSET',
+        '结合索引命中情况给出优化建议',
+        '从根因到方案的闭环诊断',
       ]"
     >
       <template #terminal>
         <AnimatedTerminal agentTitle="Claude Code + taurusdb-mcp">
           <div class="chat-row chat-row-user anim-msg anim-msg-1">
-            <div class="chat-bubble">帮我分析一下最近的慢查询</div>
+            <div class="chat-bubble">帮我分析最近的慢查询，找出根因</div>
           </div>
-          <div class="chat-row chat-row-agent anim-msg anim-msg-2">
-            <div class="chat-bubble">好的，我来查询 TaurusDB 最近的慢查询统计...</div>
+          <div class="anim-msg anim-msg-2">
+            <div class="tool-call">
+              <span class="tool-call-name">find_top_slow_sql</span><span class="tool-call-args">({ timeRange: "24h", limit: 10 })</span>
+            </div>
+            <div class="tool-result">
+              命中: SELECT ... FROM t_orders_test WHERE note LIKE '%999%' ORDER BY created_at DESC LIMIT 100 OFFSET 500
+            </div>
           </div>
           <div class="anim-msg anim-msg-3">
             <div class="tool-call">
-              <span class="tool-call-name">query_slow_queries</span><span class="tool-call-args">({ timeRange: "24h", limit: 10 })</span>
+              <span class="tool-call-name">diagnose_slow_query</span><span class="tool-call-args">(sql: "...")</span>
             </div>
           </div>
-          <div class="anim-msg anim-msg-4">
-            <div class="tool-result">找到 3 条慢查询，最长执行时间 12.4s，涉及 rows_examined 25 万行</div>
+          <div class="anim-msg anim-msg-4" style="padding: 10px 14px; border-radius: 8px; background: var(--brand-bg); border: 1px solid rgba(249,115,22,0.2); font-size: 0.78rem; line-height: 1.75;">
+            <div style="color: var(--brand); font-size: 0.72rem; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 6px;">执行计划分析</div>
+            <div><span class="term-info">avg_latency</span> 517.85ms</div>
+            <div><span class="term-info">rows_examined</span> 250,600 行</div>
+            <div><span style="color: rgba(239,68,68,0.9);">✘</span> LIKE '%999%' 前导通配符，无法利用索引</div>
+            <div><span style="color: rgba(239,68,68,0.9);">✘</span> ORDER BY + OFFSET 全表扫描叠加排序</div>
           </div>
           <div class="chat-row chat-row-agent anim-msg anim-msg-5">
-            <div class="chat-bubble">
-              分析完毕。最可疑 SQL 命中 <code>t_orders_test</code> 表，<br />
-              缺少 <code>order_date</code> 索引，建议添加复合索引：<br />
-              <code style="color:#f97316">INDEX idx_order_date_status (order_date, status)</code>
+            <div class="chat-bubble" style="line-height: 1.7;">
+              诊断结论：<br />
+              1. <code style="color:#f97316">LIKE '%999%'</code> 改成前缀匹配 <code style="color:#22c55e">LIKE '999%'</code><br />
+              2. 添加复合索引：<code style="color:#22c55e">idx_order_status (created_at DESC, status)</code><br />
+              3. <code style="color:#f97316">OFFSET 500</code> 改成游标分页<br />
+              预计提速 <strong style="color:#22c55e">50x+</strong>
+            </div>
+          </div>
+        </AnimatedTerminal>
+      </template>
+    </DemoSection>
+
+    <div class="divider"></div>
+
+    <!-- 锁竞争：报告 3.4-3.6 -->
+    <DemoSection
+      anchor="locks"
+      tag="锁竞争"
+      title="精准定位<br />blocker 和 waiter"
+      description="把 processlist 快照转换成「谁持锁 / 谁等待 / 热点在哪」的关系链，AI 直接告诉你应该先处理哪个会话。"
+      :features="[
+        '单 blocker / 单 waiter：快速锁定持锁会话',
+        '单 blocker / 多 waiter：聚合型锁等待',
+        'metadata lock：DDL 被阻塞也能定位',
+        '给出 kill / 业务热点行拆分的建议',
+      ]"
+    >
+      <template #terminal>
+        <AnimatedTerminal agentTitle="Cursor + taurusdb-mcp">
+          <div class="chat-row chat-row-user anim-msg anim-msg-1">
+            <div class="chat-bubble">UPDATE t_hot_counter_test 卡住了，是谁在挡我？</div>
+          </div>
+          <div class="anim-msg anim-msg-2">
+            <div class="tool-call">
+              <span class="tool-call-name">show_processlist</span><span class="tool-call-args">()</span>
+            </div>
+            <div class="tool-result">
+              发现 2 个会话并发 UPDATE 同一行 (counter_key='global')
+            </div>
+          </div>
+          <div class="anim-msg anim-msg-3">
+            <div class="tool-call">
+              <span class="tool-call-name">diagnose_lock_contention</span><span class="tool-call-args">()</span>
+            </div>
+          </div>
+          <div class="anim-msg anim-msg-4" style="padding: 10px 14px; border-radius: 8px; background: var(--brand-bg); border: 1px solid rgba(249,115,22,0.2); font-size: 0.78rem; line-height: 1.75;">
+            <div style="color: var(--brand); font-size: 0.72rem; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 6px;">锁竞争详情</div>
+            <div><span class="term-info">severity</span> Warning</div>
+            <div><span class="term-info">热点表</span> t_hot_counter_test</div>
+            <div><span class="term-info">最长等待</span> &gt;= 60s</div>
+            <div><span style="color: rgba(239,68,68,0.9);">blocker</span> 会话 55860 · user youweichen</div>
+          </div>
+          <div class="chat-row chat-row-agent anim-msg anim-msg-5">
+            <div class="chat-bubble" style="line-height: 1.7;">
+              这是<strong style="color:#f97316">单 blocker 阻塞</strong>：会话 55860 持有行锁未提交，导致当前 UPDATE 等待 &gt;= 60s。<br /><br />
+              建议：<br />
+              1. 确认会话 55860 是否应该提交/回滚<br />
+              2. 业务侧拆分 counter_key='global' 热点行，避免同一行并发 UPDATE
             </div>
           </div>
         </AnimatedTerminal>
@@ -171,46 +235,53 @@
 
     <div class="divider"></div>
 
+    <!-- Flashback Query: 报告 3.9 -->
     <DemoSection
-      anchor="taurusdb"
-      tag="专属能力"
-      title="发挥 TaurusDB<br />的独有价值"
-      description="Recycle Bin、Dynamic Masking、Nonblocking DDL、Flashback Query —— TaurusDB 的原生能力通过 MCP 无缝对接 AI Agent。"
+      anchor="flashback"
+      tag="Flashback Query"
+      title="按时间点回查<br />历史态数据"
+      description="误更新排查、状态流转核对、审计事实确认 —— 不用先恢复数据，也能回答「某个时刻这条记录到底是什么值」。"
       :features="[
-        'Recycle Bin：误删表秒级恢复',
-        'Dynamic Masking：敏感字段按身份动态脱敏',
-        'Nonblocking DDL：在线加列不阻断读流量',
-        'Flashback Query：按时间点回查历史数据',
+        '按历史时间点（绝对 / 相对）读取旧值',
+        '与当前态直接对照，差异一目了然',
+        '要求表建表时开启 BACKQUERY=1',
+        '误更新排查、状态流转核对',
       ]"
     >
       <template #terminal>
-        <AnimatedTerminal agentTitle="Cursor + taurusdb-mcp">
+        <AnimatedTerminal agentTitle="Claude Code + taurusdb-mcp">
           <div class="chat-row chat-row-user anim-msg anim-msg-1">
-            <div class="chat-bubble">t_recycle_bin_test 表不见了，帮我恢复</div>
+            <div class="chat-bubble">订单 1 状态刚才改错，想看更新前是什么</div>
           </div>
           <div class="anim-msg anim-msg-2">
             <div class="tool-call">
-              <span class="tool-call-name">list_recycle_bin</span><span class="tool-call-args">()</span>
+              <span class="tool-call-name">flashback_query</span><span class="tool-call-args">({ table: "t_flashback_query_test", id: 1, at: "2026-05-13 11:04:39" })</span>
+            </div>
+            <div class="tool-result">
+              ✔ 表开启 BACKQUERY=1，支持回查
             </div>
           </div>
-          <div class="anim-msg anim-msg-3">
-            <div class="tool-result">回收站中找到 t_recycle_bin_test，删除时间 2026-05-13 10:35:00</div>
+          <div class="anim-msg anim-msg-3" style="padding: 10px 14px; border-radius: 8px; background: var(--surface); border: 1px solid var(--border); font-size: 0.78rem; line-height: 1.75;">
+            <div style="color: var(--text-2); font-size: 0.72rem; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 6px;">回查结果对照</div>
+            <div><span class="term-info">时间点</span> T1 = 2026-05-13 11:04:39</div>
+            <div><span style="color: var(--text-3);">历史态 status</span> = <strong style="color: var(--warning);">draft</strong></div>
+            <div><span style="color: var(--text-3);">当前态 status</span> = <strong style="color: var(--success);">published</strong></div>
           </div>
           <div class="chat-row chat-row-agent anim-msg anim-msg-4">
-            <div class="chat-bubble">
-              恢复操作需要二次确认。<br />
-              确认恢复该表吗？回复「确认」执行。
+            <div class="chat-bubble" style="line-height: 1.7;">
+              找到：<br />
+              在 T1（11:04:39）时刻 status = <code style="color:#fbbf24">draft</code><br />
+              之后被 UPDATE 为 <code style="color:#22c55e">published</code><br /><br />
+              如需要恢复历史态，需要应用侧执行 UPDATE（Agent 只读）。
             </div>
-          </div>
-          <div class="chat-row chat-row-user anim-msg anim-msg-5">
-            <div class="chat-bubble">确认</div>
-          </div>
-          <div class="anim-msg anim-msg-6">
-            <div class="tool-result">✔ 表 t_recycle_bin_test 恢复成功，3 rows recovered</div>
           </div>
         </AnimatedTerminal>
       </template>
     </DemoSection>
+
+    <div class="divider"></div>
+
+    <TaurusScenariosTabs />
 
     <div class="divider"></div>
 
@@ -258,4 +329,5 @@ import QuickStartCards from "../components/QuickStartCards.vue";
 import DemoSection from "../components/DemoSection.vue";
 import AnimatedTerminal from "../components/AnimatedTerminal.vue";
 import AgentTabs from "../components/AgentTabs.vue";
+import TaurusScenariosTabs from "../components/TaurusScenariosTabs.vue";
 </script>
