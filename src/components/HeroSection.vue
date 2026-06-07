@@ -1,32 +1,43 @@
 <template>
-  <section class="hero">
-    <div class="section-inner hero-wrap">
-      <div class="hero-copy hero-copy-left">
-        <div class="eyebrow">
-          <span class="brand-mark" aria-hidden="true"></span>
-          <span>{{ eyebrow }}</span>
+  <section class="hero" id="hero">
+    <div class="section-inner">
+      <div class="hero-content reveal">
+        <div class="eyebrow">NEW &middot; TaurusDB MCP Server v1.0</div>
+        <h1>
+          让 AI Agent 直接操控<br />
+          <span class="gradient-orange">TaurusDB</span>
+        </h1>
+        <p class="hero-desc">
+          通过 MCP 协议,让 Claude Code、Codex、Cursor 等 AI 工具直接查询数据库、诊断性能、执行运维操作。
+        </p>
+        <div class="btn-row btn-row-center">
+          <a href="#quickstart" class="btn btn-primary">快速开始 →</a>
+          <a
+            href="https://github.com/youweichen0208/taurus-mcp-server"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="btn btn-ghost"
+          >GitHub 源码</a>
         </div>
-        <h1>{{ title }}</h1>
-        <p>{{ description }}</p>
-        <div v-if="links?.length" class="local-nav">
-          <component
-            :is="link.external ? 'a' : RouterLink"
-            v-for="link in links"
-            :key="link.to"
-            v-bind="link.external ? { href: link.to, target: '_blank', rel: 'noopener noreferrer' } : { to: link.to }"
-          >
-            {{ link.label }}
-          </component>
-        </div>
-      </div>
-
-      <div class="terminal">
-        <div class="terminal-head">
-          <div class="lights"><span class="r"></span><span class="y"></span><span class="g"></span></div>
-          <div class="terminal-title mono">{{ terminalTitle }}</div>
-        </div>
-        <div class="terminal-body mono">
-          <div v-for="line in terminalLines" :key="line">{{ line }}</div>
+        <div class="hero-terminal">
+          <TerminalCard title="terminal">
+            <div class="anim-block">
+              <div class="anim-msg anim-msg-1">
+                <span class="term-prompt">$</span> npx -y taurusdb-mcp
+              </div>
+              <div class="anim-msg anim-msg-2 term-dim">
+                ⠋ 正在启动 MCP Server...
+              </div>
+              <div class="anim-msg anim-msg-3">
+                <span class="term-brand">✔</span>
+                MCP Server 已就绪 &mdash;
+                <span class="term-warn">port 3000</span>
+              </div>
+              <div class="anim-msg anim-msg-4 term-dim">
+                已注册 23 个工具,3 个资源
+              </div>
+            </div>
+          </TerminalCard>
         </div>
       </div>
     </div>
@@ -34,14 +45,5 @@
 </template>
 
 <script setup>
-import { RouterLink } from "vue-router";
-
-defineProps({
-  eyebrow: String,
-  title: String,
-  description: String,
-  terminalTitle: String,
-  terminalLines: Array,
-  links: Array,
-});
+import TerminalCard from "./TerminalCard.vue";
 </script>
